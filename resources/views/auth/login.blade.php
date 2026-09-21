@@ -30,10 +30,39 @@
         </div>
 
         <div class="card-body">
-            <h2 class="form-title">Masuk ke akun sekolah</h2>
-            <p class="form-hint">Gunakan NPSN dan kata sandi resmi sekolah untuk mengakses layanan kepegawaian.</p>
 
-            {{-- Pesan error umum, misalnya NPSN/kata sandi salah dari controller --}}
+            {{-- Pemilih peran login --}}
+            <div class="role-tabs" role="tablist" aria-label="Pilih jenis akun">
+                <button type="button"
+                        class="role-tab {{ old('login_type', 'sekolah') === 'sekolah' ? 'active' : '' }}"
+                        data-role="sekolah"
+                        role="tab"
+                        aria-selected="{{ old('login_type', 'sekolah') === 'sekolah' ? 'true' : 'false' }}"
+                        data-title="Masuk ke akun sekolah"
+                        data-hint="Gunakan NPSN dan kata sandi resmi sekolah untuk mengakses layanan kepegawaian.">
+                    Sekolah
+                </button>
+                <button type="button"
+                        class="role-tab {{ old('login_type') === 'verifikator' ? 'active' : '' }}"
+                        data-role="verifikator"
+                        role="tab"
+                        aria-selected="{{ old('login_type') === 'verifikator' ? 'true' : 'false' }}"
+                        data-title="Masuk sebagai verifikator"
+                        data-hint="Gunakan NIP (18 digit) dan kata sandi untuk memverifikasi dokumen yang diunggah sekolah.">
+                    Verifikator
+                </button>
+            </div>
+
+            <h2 class="form-title" id="formTitle">
+                {{ old('login_type') === 'verifikator' ? 'Masuk sebagai verifikator' : 'Masuk ke akun sekolah' }}
+            </h2>
+            <p class="form-hint" id="formHint">
+                {{ old('login_type') === 'verifikator'
+                    ? 'Gunakan NIP (18 digit) dan kata sandi untuk memverifikasi dokumen yang diunggah sekolah.'
+                    : 'Gunakan NPSN dan kata sandi resmi sekolah untuk mengakses layanan kepegawaian.' }}
+            </p>
+
+            {{-- Pesan error umum, misalnya NPSN/NIP atau kata sandi salah dari controller --}}
             @if (session('error'))
                 <div class="status-msg show">
                     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="8.3" stroke="#8E2027" stroke-width="1.4"/><path d="M10 6.2V10.6" stroke="#8E2027" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="13.4" r="0.9" fill="#8E2027"/></svg>
@@ -50,13 +79,17 @@
 
             <div class="status-msg" id="statusMsg">
                 <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="8.3" stroke="#8E2027" stroke-width="1.4"/><path d="M10 6.2V10.6" stroke="#8E2027" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="13.4" r="0.9" fill="#8E2027"/></svg>
-                <span id="statusMsgText">Lengkapi NPSN dan kata sandi terlebih dahulu.</span>
+                <span id="statusMsgText">Lengkapi data akun dan kata sandi terlebih dahulu.</span>
             </div>
 
             <form id="loginForm" method="POST" action="{{ route('login') }}" novalidate>
                 @csrf
 
-                <div class="field">
+                {{-- Menandai controller: 'sekolah' atau 'verifikator' --}}
+                <input type="hidden" name="login_type" id="loginType" value="{{ old('login_type', 'sekolah') }}">
+
+                {{-- Field NPSN (tampil saat tab Sekolah aktif) --}}
+                <div class="field" id="fieldNpsn" {{ old('login_type') === 'verifikator' ? 'style="display:none"' : '' }}>
                     <label for="npsn">NPSN Sekolah</label>
                     <div class="input-shell">
                         <span class="icon" aria-hidden="true">
@@ -67,9 +100,28 @@
                                 <path d="M9.5 10.2H14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                             </svg>
                         </span>
-                        <input type="text" id="npsn" name="npsn" value="{{ old('npsn') }}" placeholder="Contoh: 40311521" inputmode="numeric" autocomplete="username" required>
+                        <input type="text" id="npsn" name="npsn" value="{{ old('npsn') }}" placeholder="Contoh: 40311521" inputmode="numeric" autocomplete="username" {{ old('login_type', 'sekolah') === 'sekolah' ? 'required' : 'disabled' }}>
                     </div>
                     @error('npsn')
+                        <p class="field-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Field NIP (tampil saat tab Verifikator aktif) --}}
+                <div class="field" id="fieldNip" {{ old('login_type') === 'verifikator' ? '' : 'style="display:none"' }}>
+                    <label for="nip">NIP Verifikator</label>
+                    <div class="input-shell">
+                        <span class="icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="8.2" r="3.2" stroke="currentColor" stroke-width="1.6"/>
+                                <path d="M5 20C5 16.4 8.1 13.5 12 13.5C15.9 13.5 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                <path d="M9 17.3L11 19.2L15.2 15.2" stroke="#C1272D" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="nip" name="nip" value="{{ old('nip') }}" placeholder="18 digit, contoh: 198501012010011003" inputmode="numeric" maxlength="18" pattern="\d{18}" title="NIP terdiri dari 18 digit angka" autocomplete="username" {{ old('login_type') === 'verifikator' ? 'required' : 'disabled' }}>
+                    </div>
+                    <p class="field-note">NIP terdiri dari 18 digit angka.</p>
+                    @error('nip')
                         <p class="field-error">{{ $message }}</p>
                     @enderror
                 </div>
@@ -108,7 +160,7 @@
 
                 <button type="submit" class="btn-submit">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 4H18C19.1 4 20 4.9 20 6V18C20 19.1 19.1 20 18 20H14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10 8L14 12L10 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 12H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                    Masuk ke Sistem
+                    <span id="submitLabel">Masuk ke Sistem</span>
                 </button>
             </form>
 
@@ -119,6 +171,6 @@
     </main>
 </div>
 
-<p class="footer-note">© {{ date('Y') }} Dinas Pendidikan Kota Makassar. Sistem Pelayanan Administrasi Kepegawaian.<br>Akses hanya untuk operator sekolah yang terdaftar resmi.</p>
+<p class="footer-note">© {{ date('Y') }} Dinas Pendidikan Kota Makassar. Sistem Pelayanan Administrasi Kepegawaian.<br>Akses hanya untuk operator sekolah dan verifikator yang terdaftar resmi.</p>
 
 @endsection
