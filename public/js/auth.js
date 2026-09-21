@@ -1,4 +1,58 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    // --- Pemilih peran login: Sekolah (NPSN) vs Verifikator (NIP) ---
+    var roleTabs = document.querySelectorAll('.role-tab');
+    var loginType = document.getElementById('loginType');
+    var fieldNpsn = document.getElementById('fieldNpsn');
+    var fieldNip = document.getElementById('fieldNip');
+    var npsnField = document.getElementById('npsn');
+    var nipField = document.getElementById('nip');
+    var formTitle = document.getElementById('formTitle');
+    var formHint = document.getElementById('formHint');
+    var submitLabel = document.getElementById('submitLabel');
+
+    function setRole(role) {
+        roleTabs.forEach(function (tab) {
+            var isActive = tab.dataset.role === role;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', String(isActive));
+        });
+
+        if (loginType) loginType.value = role;
+
+        if (role === 'verifikator') {
+            fieldNpsn.style.display = 'none';
+            fieldNip.style.display = '';
+            npsnField.required = false;
+            npsnField.disabled = true;
+            nipField.required = true;
+            nipField.disabled = false;
+            if (submitLabel) submitLabel.textContent = 'Masuk sebagai Verifikator';
+        } else {
+            fieldNip.style.display = 'none';
+            fieldNpsn.style.display = '';
+            nipField.required = false;
+            nipField.disabled = true;
+            npsnField.required = true;
+            npsnField.disabled = false;
+            if (submitLabel) submitLabel.textContent = 'Masuk ke Sistem';
+        }
+
+        var activeTab = Array.prototype.filter.call(roleTabs, function (t) {
+            return t.dataset.role === role;
+        })[0];
+        if (activeTab) {
+            if (formTitle) formTitle.textContent = activeTab.dataset.title;
+            if (formHint) formHint.textContent = activeTab.dataset.hint;
+        }
+    }
+
+    roleTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            setRole(tab.dataset.role);
+        });
+    });
+
     var toggleBtn = document.getElementById('togglePass');
     var passInput = document.getElementById('password');
     var eyeIcon = document.getElementById('eyeIcon');
@@ -18,21 +72,34 @@ document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('loginForm');
     var statusMsg = document.getElementById('statusMsg');
     var statusMsgText = document.getElementById('statusMsgText');
-    var npsnInput = document.getElementById('npsn');
 
     if (form) {
         form.addEventListener('submit', function (e) {
-            var npsnVal = npsnInput.value.trim();
+            var activeRole = loginType ? loginType.value : 'sekolah';
+            var identifierInput = activeRole === 'verifikator' ? nipField : npsnField;
+            var identifierVal = identifierInput.value.trim();
             var passVal = passInput.value.trim();
+            var identifierLabel = activeRole === 'verifikator' ? 'NIP' : 'NPSN';
 
-            if (!npsnVal || !passVal) {
+            if (!identifierVal || !passVal) {
                 e.preventDefault();
-                statusMsgText.textContent = 'Lengkapi NPSN dan kata sandi terlebih dahulu.';
+                statusMsgText.textContent = 'Lengkapi ' + identifierLabel + ' dan kata sandi terlebih dahulu.';
                 statusMsg.classList.add('show');
-                (!npsnVal ? npsnInput : passInput).focus();
+                (!identifierVal ? identifierInput : passInput).focus();
+                return;
+            }
+
+            if (activeRole === 'verifikator' && !/^\d{18}$/.test(identifierVal)) {
+                e.preventDefault();
+                statusMsgText.textContent = 'NIP harus terdiri dari 18 digit angka.';
+                statusMsg.classList.add('show');
+                identifierInput.focus();
             }
             // Jika lolos validasi ringan ini, form akan dikirim (POST) ke
-            // route('login') dan ditangani oleh controller/backend Laravel.
+            // route('login') dan ditangani oleh controller/backend Laravel,
+            // yang membaca input hidden "login_type" untuk menentukan
+            // apakah otentikasi dilakukan terhadap data sekolah (NPSN) atau
+            // data verifikator (NIP).
         });
     }
 });
