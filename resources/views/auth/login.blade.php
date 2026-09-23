@@ -1,8 +1,19 @@
-@extends('layouts.guest')
+@extends('layout.guest')
 
 @section('title', 'Login — Sistem Pelayanan Administrasi Kepegawaian | Dinas Pendidikan Kota Makassar')
 
+@php
+    // Prioritas: input lama (jika validasi gagal) > parameter ?role= dari halaman depan > default 'sekolah'
+    $selectedRole = old('login_type', request('role', 'sekolah'));
+    $selectedRole = in_array($selectedRole, ['sekolah', 'verifikator']) ? $selectedRole : 'sekolah';
+@endphp
+
 @section('content')
+
+<a href="{{ route('home') }}" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 12H5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11 6L5 12L11 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Kembali ke beranda
+</a>
 
 <div class="top-flag" aria-hidden="true"></div>
 
@@ -34,19 +45,19 @@
             {{-- Pemilih peran login --}}
             <div class="role-tabs" role="tablist" aria-label="Pilih jenis akun">
                 <button type="button"
-                        class="role-tab {{ old('login_type', 'sekolah') === 'sekolah' ? 'active' : '' }}"
+                        class="role-tab {{ $selectedRole === 'sekolah' ? 'active' : '' }}"
                         data-role="sekolah"
                         role="tab"
-                        aria-selected="{{ old('login_type', 'sekolah') === 'sekolah' ? 'true' : 'false' }}"
+                        aria-selected="{{ $selectedRole === 'sekolah' ? 'true' : 'false' }}"
                         data-title="Masuk ke akun sekolah"
                         data-hint="Gunakan NPSN dan kata sandi resmi sekolah untuk mengakses layanan kepegawaian.">
                     Sekolah
                 </button>
                 <button type="button"
-                        class="role-tab {{ old('login_type') === 'verifikator' ? 'active' : '' }}"
+                        class="role-tab {{ $selectedRole === 'verifikator' ? 'active' : '' }}"
                         data-role="verifikator"
                         role="tab"
-                        aria-selected="{{ old('login_type') === 'verifikator' ? 'true' : 'false' }}"
+                        aria-selected="{{ $selectedRole === 'verifikator' ? 'true' : 'false' }}"
                         data-title="Masuk sebagai verifikator"
                         data-hint="Gunakan NIP (18 digit) dan kata sandi untuk memverifikasi dokumen yang diunggah sekolah.">
                     Verifikator
@@ -54,10 +65,10 @@
             </div>
 
             <h2 class="form-title" id="formTitle">
-                {{ old('login_type') === 'verifikator' ? 'Masuk sebagai verifikator' : 'Masuk ke akun sekolah' }}
+                {{ $selectedRole === 'verifikator' ? 'Masuk sebagai verifikator' : 'Masuk ke akun sekolah' }}
             </h2>
             <p class="form-hint" id="formHint">
-                {{ old('login_type') === 'verifikator'
+                {{ $selectedRole === 'verifikator'
                     ? 'Gunakan NIP (18 digit) dan kata sandi untuk memverifikasi dokumen yang diunggah sekolah.'
                     : 'Gunakan NPSN dan kata sandi resmi sekolah untuk mengakses layanan kepegawaian.' }}
             </p>
@@ -86,10 +97,10 @@
                 @csrf
 
                 {{-- Menandai controller: 'sekolah' atau 'verifikator' --}}
-                <input type="hidden" name="login_type" id="loginType" value="{{ old('login_type', 'sekolah') }}">
+                <input type="hidden" name="login_type" id="loginType" value="{{ $selectedRole }}">
 
                 {{-- Field NPSN (tampil saat tab Sekolah aktif) --}}
-                <div class="field" id="fieldNpsn" {{ old('login_type') === 'verifikator' ? 'style="display:none"' : '' }}>
+                <div class="field" id="fieldNpsn" {{ $selectedRole === 'verifikator' ? 'style="display:none"' : '' }}>
                     <label for="npsn">NPSN Sekolah</label>
                     <div class="input-shell">
                         <span class="icon" aria-hidden="true">
@@ -100,7 +111,7 @@
                                 <path d="M9.5 10.2H14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                             </svg>
                         </span>
-                        <input type="text" id="npsn" name="npsn" value="{{ old('npsn') }}" placeholder="Contoh: 40311521" inputmode="numeric" autocomplete="username" {{ old('login_type', 'sekolah') === 'sekolah' ? 'required' : 'disabled' }}>
+                        <input type="text" id="npsn" name="npsn" value="{{ old('npsn') }}" placeholder="Contoh: 40311521" inputmode="numeric" autocomplete="username" {{ $selectedRole === 'sekolah' ? 'required' : 'disabled' }}>
                     </div>
                     @error('npsn')
                         <p class="field-error">{{ $message }}</p>
@@ -108,7 +119,7 @@
                 </div>
 
                 {{-- Field NIP (tampil saat tab Verifikator aktif) --}}
-                <div class="field" id="fieldNip" {{ old('login_type') === 'verifikator' ? '' : 'style="display:none"' }}>
+                <div class="field" id="fieldNip" {{ $selectedRole === 'verifikator' ? '' : 'style="display:none"' }}>
                     <label for="nip">NIP Verifikator</label>
                     <div class="input-shell">
                         <span class="icon" aria-hidden="true">
@@ -118,7 +129,7 @@
                                 <path d="M9 17.3L11 19.2L15.2 15.2" stroke="#C1272D" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </span>
-                        <input type="text" id="nip" name="nip" value="{{ old('nip') }}" placeholder="18 digit, contoh: 198501012010011003" inputmode="numeric" maxlength="18" pattern="\d{18}" title="NIP terdiri dari 18 digit angka" autocomplete="username" {{ old('login_type') === 'verifikator' ? 'required' : 'disabled' }}>
+                        <input type="text" id="nip" name="nip" value="{{ old('nip') }}" placeholder="18 digit, contoh: 198501012010011003" inputmode="numeric" maxlength="18" pattern="\d{18}" title="NIP terdiri dari 18 digit angka" autocomplete="username" {{ $selectedRole === 'verifikator' ? 'required' : 'disabled' }}>
                     </div>
                     <p class="field-note">NIP terdiri dari 18 digit angka.</p>
                     @error('nip')
