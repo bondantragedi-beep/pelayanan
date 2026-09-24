@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sekolah;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KgbController extends Controller
 {
@@ -12,25 +13,28 @@ class KgbController extends Controller
      */
     public function create(Request $request)
     {
+        $sekolah = Auth::guard('sekolah')->user();
+
         return view('dashboard.sekolah.kgb', [
-            'sekolahNama' => $request->session()->get('sekolah_nama', 'Nama Sekolah'),
-            'sekolahNpsn' => $request->session()->get('sekolah_npsn', '-'),
+            'sekolahNama' => $sekolah->nama_sekolah,
+            'sekolahNpsn' => $sekolah->npsn,
         ]);
     }
 
     /**
      * Simpan berkas KGB yang diunggah.
      *
-     * PENTING: penyimpanan di bawah ini baru menyimpan FILE ke disk publik.
-     * Belum ada tabel/model "pengajuan_kgb" untuk mencatat status
-     * (menunggu verifikasi / disetujui / ditolak) dan mengaitkan berkas
-     * dengan sekolah + pegawai yang mengajukan, karena guard/login sekolah
-     * juga belum dibuat. Setelah itu siap, tambahkan:
-     *   - migration + model PengajuanKgb (sekolah_id, nama_pegawai, status, dst)
+     * PENTING: penyimpanan di bawah ini baru menyimpan FILE ke disk publik,
+     * dikelompokkan per NPSN sekolah yang login. Belum ada tabel/model
+     * "pengajuan_kgb" untuk mencatat status (menunggu verifikasi / disetujui /
+     * ditolak). Setelah tabel itu siap, tambahkan:
+     *   - migration + model PengajuanKgb (npsn, nama_pegawai, status, dst)
      *   - simpan $skPangkatPath & $skKgbPath ke record tersebut
      */
     public function store(Request $request)
     {
+        $sekolah = Auth::guard('sekolah')->user();
+
         $validated = $request->validate([
             'sk_pangkat_terakhir' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
             'sk_kgb_terakhir'     => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
@@ -42,10 +46,10 @@ class KgbController extends Controller
         ]);
 
         $skPangkatPath = $request->file('sk_pangkat_terakhir')
-            ->store('kgb/sk-pangkat-terakhir', 'public');
+            ->store("kgb/{$sekolah->npsn}/sk-pangkat-terakhir", 'public');
 
         $skKgbPath = $request->file('sk_kgb_terakhir')
-            ->store('kgb/sk-kgb-terakhir', 'public');
+            ->store("kgb/{$sekolah->npsn}/sk-kgb-terakhir", 'public');
 
         // TODO: ganti dengan penyimpanan ke tabel pengajuan_kgb setelah model dibuat.
 

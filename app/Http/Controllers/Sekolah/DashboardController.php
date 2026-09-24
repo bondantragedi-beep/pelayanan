@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Sekolah;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     /**
      * Halaman utama dashboard operator sekolah.
-     *
-     * Catatan: $sekolahNama & $sekolahNpsn masih placeholder karena
-     * autentikasi guard 'sekolah' belum dibuat. Setelah login sekolah
-     * berfungsi, ganti bagian ini dengan data dari Auth::guard('sekolah')->user().
+     * Data sekolah sekarang diambil dari akun yang sedang login (guard 'sekolah').
      */
     public function index(Request $request)
     {
+        $sekolah = Auth::guard('sekolah')->user();
+
         return view('dashboard.sekolah.index', [
-            'sekolahNama' => $request->session()->get('sekolah_nama', 'Nama Sekolah'),
-            'sekolahNpsn' => $request->session()->get('sekolah_npsn', '-'),
+            'sekolahNama' => $sekolah->nama_sekolah,
+            'sekolahNpsn' => $sekolah->npsn,
         ]);
     }
 }
