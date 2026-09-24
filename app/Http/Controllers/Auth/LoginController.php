@@ -82,15 +82,7 @@ class LoginController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Dashboard khusus verifikator (non-admin) belum dibuat -> arahkan
-        // sementara ke halaman depan dengan pesan, sambil modul itu dikerjakan.
-        Auth::guard('verifikator')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        throw ValidationException::withMessages([
-            'nip' => 'Login berhasil, tetapi dashboard Verifikator belum tersedia. Modul ini sedang dikerjakan.',
-        ]);
+        return redirect()->intended(route('verifikator.dashboard'));
     }
 
     /**
