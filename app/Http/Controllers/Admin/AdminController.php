@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Semua data di controller ini MASIH DUMMY (contoh statis).
@@ -27,8 +28,8 @@ class AdminController extends Controller
         $dataMasukTerbaru = $this->mockDataMasuk();
 
         return view('dashboard.admin.index', [
-            'adminNama' => $request->session()->get('admin_nama', 'Admin'),
-            'adminNip'  => $request->session()->get('admin_nip', '-'),
+            'adminNama' => Auth::guard('verifikator')->user()->nama,
+            'adminNip'  => Auth::guard('verifikator')->user()->nip,
 
             'totalSekolah'            => 42,
             'totalVerifikator'        => 6,
@@ -59,8 +60,8 @@ class AdminController extends Controller
         }
 
         return view('dashboard.admin.penugasan', [
-            'adminNama' => $request->session()->get('admin_nama', 'Admin'),
-            'adminNip'  => $request->session()->get('admin_nip', '-'),
+            'adminNama' => Auth::guard('verifikator')->user()->nama,
+            'adminNip'  => Auth::guard('verifikator')->user()->nip,
 
             'daftarSekolah'     => $daftarSekolah,
             'daftarVerifikator' => $daftarVerifikator,
@@ -111,8 +112,8 @@ class AdminController extends Controller
         usort($dataMasuk, fn ($a, $b) => strtotime($a['tanggal']) <=> strtotime($b['tanggal']));
 
         return view('dashboard.admin.data-masuk', [
-            'adminNama' => $request->session()->get('admin_nama', 'Admin'),
-            'adminNip'  => $request->session()->get('admin_nip', '-'),
+            'adminNama' => Auth::guard('verifikator')->user()->nama,
+            'adminNip'  => Auth::guard('verifikator')->user()->nip,
 
             'dataMasuk'    => $dataMasuk,
             'daftarTahun'  => [date('Y'), date('Y') - 1],
