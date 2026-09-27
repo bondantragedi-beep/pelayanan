@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\LayarKantorController;
 use App\Http\Controllers\Sekolah\BerkasController;
 use App\Http\Controllers\Sekolah\DashboardController;
 use App\Http\Controllers\Sekolah\KgbController;
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
+// Layar kantor: sengaja TANPA middleware auth, supaya bisa langsung dipasang
+// di TV/monitor kantor tanpa ada yang perlu login berulang kali.
+Route::get('/layar-kantor', [LayarKantorController::class, 'index'])->name('layar-kantor');
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
