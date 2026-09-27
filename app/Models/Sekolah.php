@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Sekolah extends Authenticatable
@@ -21,6 +23,7 @@ class Sekolah extends Authenticatable
         'status',
         'kelurahan',
         'kecamatan',
+        'verifikator_nip',
         'password',
     ];
 
@@ -34,5 +37,20 @@ class Sekolah extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function verifikator(): BelongsTo
+    {
+        return $this->belongsTo(Verifikator::class, 'verifikator_nip', 'nip');
+    }
+
+    public function pegawai(): HasMany
+    {
+        return $this->hasMany(Pegawai::class, 'npsn', 'npsn');
+    }
+
+    public function pengajuan(): HasMany
+    {
+        return $this->hasMany(Pengajuan::class, 'npsn', 'npsn');
     }
 }

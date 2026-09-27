@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Verifikator extends Authenticatable
@@ -33,5 +34,11 @@ class Verifikator extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];
+    }
+
+    /** Sekolah-sekolah yang ditugaskan ke verifikator ini lewat halaman Penugasan Sekolah. */
+    public function sekolahBinaan(): HasMany
+    {
+        return $this->hasMany(Sekolah::class, 'verifikator_nip', 'nip');
     }
 }
