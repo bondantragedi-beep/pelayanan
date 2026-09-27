@@ -32,7 +32,7 @@
         [
             'key'   => 'riwayat',
             'label' => 'Riwayat Diproses',
-            'route' => null,
+            'route' => 'verifikator.riwayat',
             'icon'  => '<circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5V12L15 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
         ],
     ];
