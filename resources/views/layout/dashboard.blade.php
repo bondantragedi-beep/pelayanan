@@ -14,6 +14,7 @@
     <link rel="icon" href="{{ asset('imager/logo disdik.PNG') }}">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
     @stack('styles')
 </head>
@@ -96,6 +97,26 @@
         </div>
 
         <nav class="dash-nav">
+            <p class="dash-nav-label">Berkas Saya</p>
+
+            <a href="{{ route('sekolah.berkas') }}"
+               class="dash-nav-item {{ $activeMenu === 'daftar-berkas' ? 'is-active' : '' }}">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 12H20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 18H14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </span>
+                <span class="nav-text">Daftar Berkas Saya</span>
+            </a>
+
+            <a href="{{ route('sekolah.inbox') }}"
+               class="dash-nav-item {{ $activeMenu === 'inbox' ? 'is-active' : '' }}">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3.5" y="6" width="17" height="13" rx="2.2" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 7L12 13.5L20.5 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="nav-text">Inbox</span>
+            </a>
+        </nav>
+
+        <nav class="dash-nav" style="padding-top:0;">
             <p class="dash-nav-label">Layanan</p>
 
             @foreach ($sekolahMenu as $item)
