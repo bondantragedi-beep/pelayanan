@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Sekolah\BerkasController;
 use App\Http\Controllers\Sekolah\DashboardController;
 use App\Http\Controllers\Sekolah\KgbController;
 use App\Http\Controllers\Verifikator\DashboardController as VerifikatorDashboardController;
@@ -20,6 +21,8 @@ Route::middleware('auth:sekolah')->prefix('sekolah')->name('sekolah.')->group(fu
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/layanan/kgb', [KgbController::class, 'create'])->name('kgb');
     Route::post('/layanan/kgb', [KgbController::class, 'store'])->name('kgb.store');
+    Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas');
+    Route::get('/inbox', [BerkasController::class, 'inbox'])->name('inbox');
 });
 
 // Dikunci: verifikator biasa maupun admin sama-sama login lewat guard 'verifikator'.
