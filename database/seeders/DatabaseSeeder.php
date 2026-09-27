@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SekolahSeeder::class,
             VerifikatorSeeder::class,
+            PengajuanSeeder::class,
         ]);
     }
 }
