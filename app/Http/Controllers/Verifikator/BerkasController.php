@@ -109,7 +109,8 @@ class BerkasController extends Controller
 
         $verifikator = Auth::guard('verifikator')->user();
 
-        $daftarPegawai = Pegawai::where('kecamatan', $verifikator->kecamatan)->get();
+        $npsnBinaan = $verifikator->sekolahBinaan()->pluck('npsn');
+        $daftarPegawai = Pegawai::whereIn('npsn', $npsnBinaan)->get();
         $referensiGaji = ReferensiGaji::orderBy('golongan')->orderBy('masa_kerja_tahun')->get();
 
         return view('dashboard.verifikator.terima', [
@@ -245,7 +246,7 @@ class BerkasController extends Controller
     {
         $verifikator = Auth::guard('verifikator')->user();
 
-        $daftar = Pengajuan::whereHas('sekolah', fn ($q) => $q->where('kecamatan', $verifikator->kecamatan))
+        $daftar = Pengajuan::whereHas('sekolah', fn ($q) => $q->where('verifikator_nip', $verifikator->nip))
             ->where('status', '!=', 'pending')
             ->latest('diproses_pada')
             ->get();
@@ -262,7 +263,7 @@ class BerkasController extends Controller
     private function pastikanWilayahSama(Pengajuan $pengajuan): void
     {
         $verifikator = Auth::guard('verifikator')->user();
-        abort_unless($pengajuan->sekolah->kecamatan === $verifikator->kecamatan, 403, 'Berkas ini bukan wilayah tanggung jawab Anda.');
+        abort_unless($pengajuan->sekolah->verifikator_nip === $verifikator->nip, 403, 'Berkas ini bukan sekolah yang ditugaskan ke Anda.');
     }
 
     private function pastikanSudahDilihat(Pengajuan $pengajuan): void
