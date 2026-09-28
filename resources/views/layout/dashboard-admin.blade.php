@@ -42,6 +42,27 @@
         ],
     ];
 
+    $dataMasterMenu = [
+        [
+            'key'   => 'data-master-sekolah',
+            'label' => 'Sekolah',
+            'route' => 'admin.data-master.sekolah.index',
+            'icon'  => '<path d="M4 19V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 15L9 10L13 14L20 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+        ],
+        [
+            'key'   => 'data-master-pegawai',
+            'label' => 'Pegawai',
+            'route' => 'admin.data-master.pegawai.index',
+            'icon'  => '<circle cx="12" cy="8" r="3.3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.4 8.1 13.6 12 13.6C15.9 13.6 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+        ],
+        [
+            'key'   => 'data-master-verifikator',
+            'label' => 'Verifikator',
+            'route' => 'admin.data-master.verifikator.index',
+            'icon'  => '<circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19C3.5 15.7 6 13 9 13C12 13 14.5 15.7 14.5 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 8.5H21M18.5 6V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+        ],
+    ];
+
     $activeMenu = trim($__env->yieldContent('active-menu', ''));
 @endphp
 
@@ -71,6 +92,20 @@
             <p class="dash-nav-label">Menu Admin</p>
 
             @foreach ($adminMenu as $item)
+                <a href="{{ route($item['route']) }}"
+                   class="dash-nav-item {{ $activeMenu === $item['key'] ? 'is-active' : '' }}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $item['icon'] !!}</svg>
+                    </span>
+                    <span class="nav-text">{{ $item['label'] }}</span>
+                </a>
+            @endforeach
+        </nav>
+
+        <nav class="dash-nav" style="padding-top:0;">
+            <p class="dash-nav-label">Data Master</p>
+
+            @foreach ($dataMasterMenu as $item)
                 <a href="{{ route($item['route']) }}"
                    class="dash-nav-item {{ $activeMenu === $item['key'] ? 'is-active' : '' }}">
                     <span class="nav-icon">
