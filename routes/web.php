@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
+use App\Http\Controllers\Admin\VerifikatorController as AdminVerifikatorController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LayarKantorController;
 use App\Http\Controllers\Sekolah\BerkasController;
@@ -54,4 +57,27 @@ Route::middleware(['auth:verifikator', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/penugasan', [AdminController::class, 'penugasan'])->name('penugasan');
     Route::post('/penugasan/{npsn}', [AdminController::class, 'updatePenugasan'])->name('penugasan.update');
     Route::get('/data-masuk', [AdminController::class, 'dataMasuk'])->name('data-masuk');
+
+    Route::prefix('data-master')->name('data-master.')->group(function () {
+        Route::get('/sekolah', [AdminSekolahController::class, 'index'])->name('sekolah.index');
+        Route::get('/sekolah/tambah', [AdminSekolahController::class, 'create'])->name('sekolah.create');
+        Route::post('/sekolah', [AdminSekolahController::class, 'store'])->name('sekolah.store');
+        Route::get('/sekolah/{sekolah}/ubah', [AdminSekolahController::class, 'edit'])->name('sekolah.edit');
+        Route::put('/sekolah/{sekolah}', [AdminSekolahController::class, 'update'])->name('sekolah.update');
+        Route::delete('/sekolah/{sekolah}', [AdminSekolahController::class, 'destroy'])->name('sekolah.destroy');
+
+        Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+        Route::get('/pegawai/tambah', [PegawaiController::class, 'create'])->name('pegawai.create');
+        Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+        Route::get('/pegawai/{pegawai}/ubah', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+        Route::put('/pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
+        Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+
+        Route::get('/verifikator', [AdminVerifikatorController::class, 'index'])->name('verifikator.index');
+        Route::get('/verifikator/tambah', [AdminVerifikatorController::class, 'create'])->name('verifikator.create');
+        Route::post('/verifikator', [AdminVerifikatorController::class, 'store'])->name('verifikator.store');
+        Route::get('/verifikator/{verifikator}/ubah', [AdminVerifikatorController::class, 'edit'])->name('verifikator.edit');
+        Route::put('/verifikator/{verifikator}', [AdminVerifikatorController::class, 'update'])->name('verifikator.update');
+        Route::delete('/verifikator/{verifikator}', [AdminVerifikatorController::class, 'destroy'])->name('verifikator.destroy');
+    });
 });
