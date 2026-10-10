@@ -71,9 +71,9 @@ class SekolahController extends Controller
     public function destroy(Sekolah $sekolah)
     {
         $nama = $sekolah->nama_sekolah;
-        $sekolah->delete(); // pegawai & pengajuan terkait ikut terhapus (cascadeOnDelete)
+        $sekolah->delete(); // pengajuan sekolah ikut terhapus (cascade); pegawai tetap ada, hanya jadi 'belum terhubung ke sekolah' (nullOnDelete)
 
-        return redirect()->route('admin.data-master.sekolah.index')->with('success', "Sekolah {$nama} beserta data pegawai & pengajuannya telah dihapus.");
+        return redirect()->route('admin.data-master.sekolah.index')->with('success', "Sekolah {$nama} telah dihapus. Data pegawainya tetap tersimpan dan kini berstatus belum terhubung ke sekolah; pengajuan milik sekolah ini ikut terhapus.");
     }
 
     private function validated(Request $request, bool $isCreate, ?string $npsnLama = null): array
