@@ -9,9 +9,39 @@
 
 @section('content')
 
+@if ($totalBelumTerhubung > 0)
+    <div class="mock-note">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.2" r="0.9" fill="currentColor"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>
+            <strong>{{ $totalBelumTerhubung }} pegawai belum terhubung ke sekolah.</strong>
+            Pegawai tanpa sekolah tidak akan muncul di pencarian NIP milik verifikator. Pilih sekolahnya lewat tombol Ubah.
+            <a href="{{ route('admin.data-master.pegawai.index', ['belum_terhubung' => 1]) }}" style="color:inherit;font-weight:700;">Tampilkan yang belum terhubung →</a>
+        </span>
+    </div>
+@endif
+
+<div class="filter-bar">
+    <form method="GET" action="{{ route('admin.data-master.pegawai.index') }}" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;width:100%;">
+        <div class="filter-field" style="flex:1 1 260px;">
+            <label for="fCari">Cari</label>
+            <input type="text" name="q" id="fCari" value="{{ $q }}" placeholder="NIP, nama, atau unit kerja..." style="width:100%;height:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);font-size:13px;">
+        </div>
+        <div class="filter-field">
+            <label style="display:flex;align-items:center;gap:8px;height:38px;text-transform:none;font-size:12.5px;">
+                <input type="checkbox" name="belum_terhubung" value="1" {{ request()->boolean('belum_terhubung') ? 'checked' : '' }}>
+                Hanya yang belum terhubung ke sekolah
+            </label>
+        </div>
+        <div class="filter-actions">
+            <button type="submit" class="btn-filter">Terapkan</button>
+            <a href="{{ route('admin.data-master.pegawai.index') }}" class="btn-reset">Reset</a>
+        </div>
+    </form>
+</div>
+
 <div class="panel" style="padding:0;">
     <div class="section-heading" style="padding:20px 22px 0;">
-        <h2>Daftar Pegawai</h2>
+        <h2>Daftar Pegawai <span class="count-pill" style="margin-left:8px;">{{ $daftarPegawai->total() }} orang</span></h2>
         <a href="{{ route('admin.data-master.pegawai.create') }}" class="btn-add">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             Tambah Pegawai
@@ -26,8 +56,8 @@
                         <th>NIP</th>
                         <th>Nama</th>
                         <th>Status</th>
-                        <th>Sekolah</th>
-                        <th>Golongan</th>
+                        <th>Unit Kerja</th>
+                        <th>Golongan / Pangkat</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -37,11 +67,16 @@
                             <td>{{ $p->nip }}</td>
                             <td>
                                 <span class="cell-strong">{{ $p->nama }}</span>
-                                <span class="cell-sub">{{ $p->pangkat_jabatan }}</span>
+                                <span class="cell-sub">{{ $p->nama_jabatan }}</span>
                             </td>
-                            <td>{{ $p->status }}</td>
-                            <td>{{ $p->sekolah->nama_sekolah ?? '—' }}</td>
-                            <td>{{ $p->golongan ?? '—' }}</td>
+                            <td>{{ $p->status_pegawai ?? '—' }}</td>
+                            <td>
+                                {{ $p->unit_kerja ?: ($p->sekolah->nama_sekolah ?? '—') }}
+                                @if (! $p->npsn)
+                                    <span class="cell-sub"><span class="badge badge-unassigned">Belum terhubung ke sekolah</span></span>
+                                @endif
+                            </td>
+                            <td>{{ $p->golongan_pangkat ?? '—' }}</td>
                             <td>
                                 <div class="row-actions">
                                     <a href="{{ route('admin.data-master.pegawai.edit', $p) }}" class="icon-btn" title="Ubah">
@@ -57,12 +92,26 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="table-empty">Belum ada data pegawai.</td></tr>
+                        <tr><td colspan="6" class="table-empty">Tidak ada data pegawai.</td></tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
+
+    @if ($daftarPegawai->lastPage() > 1)
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 22px;border-top:1px solid var(--line);">
+            <span style="font-size:12.5px;color:var(--muted);">Halaman {{ $daftarPegawai->currentPage() }} dari {{ $daftarPegawai->lastPage() }}</span>
+            <div style="display:flex;gap:8px;">
+                @if ($daftarPegawai->previousPageUrl())
+                    <a href="{{ $daftarPegawai->previousPageUrl() }}" class="btn-reset">← Sebelumnya</a>
+                @endif
+                @if ($daftarPegawai->nextPageUrl())
+                    <a href="{{ $daftarPegawai->nextPageUrl() }}" class="btn-reset">Berikutnya →</a>
+                @endif
+            </div>
+        </div>
+    @endif
 </div>
 
 @endsection
