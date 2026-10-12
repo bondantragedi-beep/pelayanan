@@ -14,15 +14,35 @@
         <div class="panel-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9V3H18V9" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 18H4C3.4 18 3 17.6 3 17V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V17C21 17.6 20.6 18 20 18H18" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="6" y="14" width="12" height="7" stroke="currentColor" stroke-width="1.6"/></svg>
         </div>
-        <h2>Langkah 1 — Cetak Dokumen</h2>
+        <h2>Langkah 1 — Unduh Surat KGB</h2>
     </div>
+
+    @php $v = $pengajuan->verifikasiKgb; @endphp
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px 28px;padding:12px 14px;margin-bottom:14px;background:var(--blue-50);border:1px solid var(--line);border-radius:12px;font-size:13px;">
+        <span><span style="color:var(--muted);">Jenis surat</span><br><strong>{{ $v->jenis_pegawai }}</strong></span>
+        <span><span style="color:var(--muted);">Nama</span><br><strong>{{ $v->nama_pegawai }}</strong></span>
+        <span><span style="color:var(--muted);">NIP</span><br><strong>{{ $v->nip_pegawai }}</strong></span>
+        <span><span style="color:var(--muted);">Unit kerja</span><br><strong>{{ $v->unit_kerja }}</strong></span>
+    </div>
+
     <p style="font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.6;">
-        Unduh draf Surat Keputusan KGB atas nama <strong>{{ $pengajuan->verifikasiKgb->nama_pegawai }}</strong> di bawah ini, cetak, lalu mintakan tanda tangan pimpinan.
+        Unduh surat dalam format <strong>{{ $v->jenis_pegawai }}</strong>, lalu unggah ke sistem persuratan.
+        Kode seperti <code>${nomor_naskah}</code>, <code>${tanggal_naskah}</code>, <code>${ttd_pengirim}</code>,
+        <code>${nama_pengirim}</code>, dan <code>${nip_pengirim}</code> sengaja dibiarkan di PDF karena akan diisi
+        oleh sistem persuratan tersebut.
     </p>
-    <a href="{{ route('verifikator.berkas.cetak.pdf', $pengajuan) }}" target="_blank" class="btn-primary" style="text-decoration:none;">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 11.5L12 16L16.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Unduh / Cetak PDF
-    </a>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <a href="{{ route('verifikator.berkas.cetak.pdf', $pengajuan) }}" class="btn-primary" style="text-decoration:none;">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 11.5L12 16L16.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18V19C4 19.6 4.4 20 5 20H19C19.6 20 20 19.6 20 19V18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Unduh PDF Surat {{ $v->jenis_pegawai }}
+        </a>
+
+        @unless ($pengajuan->hasil_path)
+            <a href="{{ route('verifikator.berkas.terima', $pengajuan) }}" class="btn-secondary" style="text-decoration:none;">Ubah Data</a>
+        @endunless
+    </div>
 </div>
 
 <div class="panel">
@@ -33,7 +53,7 @@
         <h2>Langkah 2 — Unggah Hasil Tanda Tangan</h2>
     </div>
     <p style="font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.6;">
-        Setelah ditandatangani pimpinan, scan dokumennya (format PDF) lalu unggah di sini. Begitu terkirim, dokumen langsung muncul di menu <strong>Inbox</strong> sekolah dan berkas ini akan hilang dari daftar yang menunggu TTD.
+        Setelah surat diproses dan ditandatangani pimpinan lewat sistem persuratan, unggah hasil akhirnya (format PDF) di sini. Begitu terkirim, dokumen langsung muncul di menu <strong>Inbox</strong> sekolah dan berkas ini akan hilang dari daftar yang menunggu TTD.
     </p>
 
     <form method="POST" action="{{ route('verifikator.berkas.kirim', $pengajuan) }}" enctype="multipart/form-data" data-upload-form>
