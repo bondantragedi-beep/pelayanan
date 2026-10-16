@@ -3,35 +3,37 @@
 namespace Database\Seeders;
 
 use App\Models\ReferensiGaji;
+use App\Support\TabelGaji;
 use Illuminate\Database\Seeder;
 
 class ReferensiGajiSeeder extends Seeder
 {
     /**
-     * CONTOH KASAR — bukan angka resmi. Ganti dengan tabel gaji pokok PNS/PPPK
-     * yang berlaku (per golongan & masa kerja golongan, biasanya kelipatan 2
-     * tahun) begitu datanya tersedia.
+     * Mengisi tabel referensi_gaji dari tabel gaji pokok resmi:
+     *  - PNS  : Lampiran PP Nomor 5 Tahun 2024   (berlaku 1 Januari 2024)
+     *  - PPPK : Lampiran Perpres Nomor 11 Tahun 2024 (berlaku 1 Januari 2024)
+     *
+     * Datanya ada di database/data/*.csv. Untuk mengubah angka (misalnya kalau
+     * ada peraturan baru), edit file CSV-nya lalu jalankan:
+     *     php artisan db:seed --class=ReferensiGajiSeeder
+     * Seeder ini aman dijalankan berulang kali (updateOrCreate).
      */
     public function run(): void
     {
-        $golonganList = ['III/a', 'III/b', 'III/c', 'III/d'];
-        $gajiAwal = [
-            'III/a' => 2900000,
-            'III/b' => 3000000,
-            'III/c' => 3100000,
-            'III/d' => 3200000,
+        $berkas = [
+            database_path('data/gaji_pns_pp5_2024.csv'),
+            database_path('data/gaji_pppk_perpres11_2024.csv'),
         ];
 
-        foreach ($golonganList as $golongan) {
-            $gaji = $gajiAwal[$golongan];
-
-            // Masa kerja 0, 2, 4, 6, ... 20 tahun — tiap naik 2 tahun, gaji naik contoh 3%.
-            for ($masaKerja = 0; $masaKerja <= 20; $masaKerja += 2) {
+        foreach ($berkas as $file) {
+            foreach (TabelGaji::baca($file) as $baris) {
                 ReferensiGaji::updateOrCreate(
-                    ['golongan' => $golongan, 'masa_kerja_tahun' => $masaKerja],
-                    ['gaji_pokok' => (int) round($gaji)]
+                    [
+                        'golongan'         => $baris['golongan'],
+                        'masa_kerja_tahun' => $baris['masa_kerja_tahun'],
+                    ],
+                    ['gaji_pokok' => $baris['gaji_pokok']]
                 );
-                $gaji *= 1.03;
             }
         }
     }
