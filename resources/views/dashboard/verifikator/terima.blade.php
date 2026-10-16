@@ -170,15 +170,15 @@
             </div>
 
             <div class="form-field">
-                <label>Berdasarkan Masa Kerja — Tahun <span class="req">*</span></label>
+                <label>Masa Kerja Golongan (MKG) — Tahun <span class="req">*</span></label>
                 <input type="number" name="masa_kerja_tahun" id="masaKerjaTahun" min="2" max="50"
                        value="{{ $v('masa_kerja_tahun') }}" placeholder="Contoh: 32" required>
                 @error('masa_kerja_tahun')<p class="field-error">{{ $message }}</p>@enderror
-                <span class="form-hint">Masa kerja BARU (setelah KGB ini). Masa kerja lama otomatis dihitung 2 tahun sebelumnya.</span>
+                <span class="form-hint">MKG BARU (setelah KGB ini). Gaji pokok lama otomatis diambil dari MKG 2 tahun sebelumnya.</span>
             </div>
 
             <div class="form-field" data-only="PPPK">
-                <label>Berdasarkan Masa Kerja — Bulan</label>
+                <label>Masa Kerja Golongan (MKG) — Bulan</label>
                 <input type="number" name="masa_kerja_bulan" id="masaKerjaBulan" min="0" max="11" value="{{ $v('masa_kerja_bulan', 0) }}">
                 @error('masa_kerja_bulan')<p class="field-error">{{ $message }}</p>@enderror
             </div>
@@ -202,6 +202,7 @@
 
             <div class="form-field full">
                 <span class="form-hint" id="gajiHint"></span>
+                <button type="button" id="gajiToggle" class="btn-secondary" style="display:none;align-self:flex-start;margin-top:8px;padding:8px 14px;font-size:12.5px;">Ubah manual</button>
             </div>
 
             <div class="form-field">
