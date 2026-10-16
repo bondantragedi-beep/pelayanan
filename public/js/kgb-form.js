@@ -35,6 +35,7 @@
         gajiLama: $('gajiLama'),
         gajiBaru: $('gajiBaru'),
         gajiHint: $('gajiHint'),
+        gajiToggle: $('gajiToggle'),
         tmt: $('tmtBaru'),
         kgb: $('kgbBerikutnya'),
         labelKgb: $('labelKgbBerikutnya'),
@@ -52,6 +53,9 @@
     // Kalau jenis sudah terisi saat halaman dibuka (mengubah data / isian lama),
     // jangan ditebak ulang dari status pegawai.
     var jenisManual = el.jenis.value !== '';
+
+    // true bila verifikator menekan "Ubah manual" pada gaji pokok
+    var gajiManual = false;
 
     /* ---------------- util ---------------- */
 
@@ -101,6 +105,33 @@
             }
         }
         return null;
+    }
+
+    function sumberTabel(jenis) {
+        return jenis === 'PPPK' ? 'Perpres No. 11 Tahun 2024' : 'PP No. 5 Tahun 2024';
+    }
+
+    function mkgTersedia(golongan) {
+        var th = [];
+        for (var i = 0; i < gaji.length; i++) {
+            if (gaji[i].golongan === golongan) { th.push(Number(gaji[i].masa_kerja_tahun)); }
+        }
+        th.sort(function (a, b) { return a - b; });
+        if (th.length === 0) { return ''; }
+        return th.length <= 8 ? th.join(', ') : th.slice(0, 4).join(', ') + ', ..., ' + th[th.length - 1];
+    }
+
+    function samaDenganTabel(input, nilai) {
+        return !!input && nilai !== null && input.value.replace(/\D/g, '') === String(nilai);
+    }
+
+    function kunciGaji(kunci, adaDiTabel) {
+        if (el.gajiLama) { el.gajiLama.readOnly = kunci; }
+        if (el.gajiBaru) { el.gajiBaru.readOnly = kunci; }
+        if (el.gajiToggle) {
+            el.gajiToggle.style.display = adaDiTabel ? '' : 'none';
+            el.gajiToggle.textContent = kunci ? 'Ubah manual' : 'Kembali ke otomatis';
+        }
     }
 
     /* ---------------- tampilan sesuai jenis ---------------- */
@@ -157,20 +188,40 @@
             el.masaLama.value = adaMasaKerja ? (Math.max(th - 2, 0) + ' Tahun ' + bl + ' Bulan') : '';
         }
 
-        // Gaji lama = (golongan, masa kerja - 2) ; gaji baru = (golongan, masa kerja)
+        // Gaji lama = (golongan, MKG - 2) ; gaji baru = (golongan, MKG) pada tabel gaji resmi
         var lama = (gol && adaMasaKerja) ? cariGaji(gol, th - 2) : null;
         var baru = (gol && adaMasaKerja) ? cariGaji(gol, th) : null;
+        var lengkap = lama !== null && baru !== null;
+
+        if (lengkap) {
+            // nilai yang sama persis dengan tabel dianggap "otomatis" (juga saat membuka data tersimpan)
+            if (samaDenganTabel(el.gajiLama, lama)) { el.gajiLama.dataset.auto = '1'; }
+            if (samaDenganTabel(el.gajiBaru, baru)) { el.gajiBaru.dataset.auto = '1'; }
+        } else {
+            gajiManual = false;
+        }
 
         setAuto(el.gajiLama, lama !== null ? formatRupiah(lama) : '');
         setAuto(el.gajiBaru, baru !== null ? formatRupiah(baru) : '');
 
+        var terkunci = lengkap && !gajiManual &&
+            el.gajiLama.dataset.auto === '1' && el.gajiBaru.dataset.auto === '1';
+        kunciGaji(terkunci, lengkap);
+
         if (el.gajiHint) {
             if (!jenis || !gol || !adaMasaKerja) {
                 el.gajiHint.textContent = '';
-            } else if (lama !== null && baru !== null) {
-                el.gajiHint.textContent = 'Gaji terisi otomatis dari tabel gaji. Periksa kembali dengan tabel resmi sebelum menyimpan.';
+            } else if (lengkap) {
+                var sesuai = samaDenganTabel(el.gajiLama, lama) && samaDenganTabel(el.gajiBaru, baru);
+                var awal = terkunci ? 'Gaji terisi otomatis. '
+                    : (sesuai ? 'Gaji dibuka untuk diubah manual. ' : 'Gaji diisi manual dan berbeda dari tabel resmi. ');
+                el.gajiHint.textContent = awal + 'Sumber: ' + sumberTabel(jenis) + ', golongan ' + gol +
+                    ' (MKG ' + (th - 2) + ' = Rp ' + formatRupiah(lama) + '; MKG ' + th + ' = Rp ' + formatRupiah(baru) + ').';
             } else {
-                el.gajiHint.textContent = 'Golongan / masa kerja ini belum ada di tabel gaji. Isi gaji lama dan baru secara manual.';
+                var tersedia = mkgTersedia(gol);
+                el.gajiHint.textContent = 'Golongan ' + gol + ' dengan MKG ' + th + ' (atau ' + (th - 2) + ') tidak ada di tabel ' +
+                    sumberTabel(jenis) + '.' + (tersedia ? ' MKG yang tersedia: ' + tersedia + '.' : '') +
+                    ' Periksa kembali MKG, atau isi gaji manual.';
             }
         }
 
@@ -246,6 +297,23 @@
 
     el.nip.addEventListener('input', isiDariPegawai);
     el.nip.addEventListener('change', isiDariPegawai);
+
+    if (el.gajiToggle) {
+        el.gajiToggle.addEventListener('click', function () {
+            if (el.gajiLama.readOnly) {
+                // sedang terkunci -> buka untuk diubah manual
+                gajiManual = true;
+                el.gajiLama.dataset.auto = '';
+                el.gajiBaru.dataset.auto = '';
+            } else {
+                // sedang terbuka -> kembali ke nilai tabel (menimpa isian manual)
+                gajiManual = false;
+                el.gajiLama.dataset.auto = '1';
+                el.gajiBaru.dataset.auto = '1';
+            }
+            hitung();
+        });
+    }
 
     el.golongan.addEventListener('change', hitung);
     el.tahun.addEventListener('input', hitung);
