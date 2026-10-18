@@ -8,6 +8,7 @@ use App\Models\Sekolah;
 use App\Models\Verifikator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
@@ -39,57 +40,104 @@ class AdminController extends Controller
     }
 
     /**
-     * Halaman penugasan sekolah ke verifikator — sekarang benar-benar
-     * membaca & menyimpan relasi sekolah.verifikator_nip.
+     * Halaman penugasan sekolah ke verifikator.
+     *
+     * Semua sekolah dimuat sekaligus (sekitar 370 baris, ringan). Penyaringan
+     * (jenjang, kecamatan, status penugasan, pencarian) dan pencentangan
+     * dilakukan di browser lewat public/js/penugasan.js supaya instan, lalu
+     * hasil centangan dikirim sekali ke updatePenugasanMassal().
      */
     public function penugasan(Request $request)
     {
-        $query = Sekolah::query();
+        $sekolah = Sekolah::with('verifikator:nip,nama')
+            ->orderBy('kecamatan')
+            ->orderBy('nama_sekolah')
+            ->get();
 
-        if ($kecamatan = $request->query('kecamatan')) {
-            $query->where('kecamatan', $kecamatan);
-        }
-        if ($statusTugas = $request->query('status_tugas')) {
-            $statusTugas === 'assigned'
-                ? $query->whereNotNull('verifikator_nip')
-                : $query->whereNull('verifikator_nip');
-        }
+        $verifikator = Verifikator::where('is_admin', false)->orderBy('nama')->get();
 
-        $daftarSekolah = $query->with('verifikator')->orderBy('nama_sekolah')->get();
+        // Beban kerja tiap verifikator: jumlah sekolah binaan, dipecah per jenjang.
+        $milikVerifikator = $sekolah->whereNotNull('verifikator_nip')->groupBy('verifikator_nip');
+        $daftarVerifikator = $verifikator->map(function ($v) use ($milikVerifikator) {
+            $milik = $milikVerifikator->get($v->nip, collect());
+
+            return [
+                'nip'         => $v->nip,
+                'nama'        => $v->nama,
+                'total'       => $milik->count(),
+                'per_jenjang' => $milik->countBy('jenjang')->all(),
+            ];
+        })->values()->all();
+
+        // Jumlah sekolah per jenjang (SD, SMP, ...).
+        $daftarJenjang = $sekolah->countBy('jenjang')->sortKeys()->all();
+
+        // Jumlah sekolah per kecamatan, beserta yang belum ditugaskan. Kecamatan kosong ditaruh paling akhir.
+        $daftarKecamatan = $sekolah->groupBy(fn ($s) => (string) $s->kecamatan)
+            ->map(fn ($g) => ['total' => $g->count(), 'belum' => $g->whereNull('verifikator_nip')->count()])
+            ->sortBy(fn ($v, $k) => $k === '' ? "\u{10FFFF}" : mb_strtolower($k))
+            ->all();
+
+        $sudah = $sekolah->whereNotNull('verifikator_nip')->count();
 
         return view('dashboard.admin.penugasan', [
             'adminNama' => Auth::guard('verifikator')->user()->nama,
             'adminNip'  => Auth::guard('verifikator')->user()->nip,
 
-            'daftarSekolah'     => $daftarSekolah->map(fn ($s) => [
-                'npsn'        => $s->npsn,
-                'nama'        => $s->nama_sekolah,
-                'status'      => $s->status,
-                'jenjang'     => $s->jenjang,
-                'kecamatan'   => $s->kecamatan,
-                'verifikator' => $s->verifikator->nama ?? null,
-            ]),
-            'daftarVerifikator' => Verifikator::where('is_admin', false)->orderBy('nama')->get()
-                ->map(fn ($v) => ['id' => $v->nip, 'nama' => $v->nama, 'kecamatan' => $v->kecamatan]),
-            'daftarKecamatan'   => Sekolah::whereNotNull('kecamatan')->distinct()->pluck('kecamatan'),
+            'daftarSekolah'     => $sekolah,
+            'daftarVerifikator' => $daftarVerifikator,
+            'daftarJenjang'     => $daftarJenjang,
+            'daftarKecamatan'   => $daftarKecamatan,
+            'ringkasan'         => [
+                'total' => $sekolah->count(),
+                'sudah' => $sudah,
+                'belum' => $sekolah->count() - $sudah,
+            ],
         ]);
     }
 
     /**
-     * Simpan penugasan verifikator untuk satu sekolah — sekarang benar-benar tersimpan.
+     * Tugaskan banyak sekolah sekaligus ke satu verifikator, atau lepaskan
+     * penugasannya (aksi = lepas). Dikirim dari halaman Penugasan Sekolah.
      */
-    public function updatePenugasan(Request $request, string $npsn)
+    public function updatePenugasanMassal(Request $request)
     {
         $request->validate([
-            'verifikator_id' => ['nullable', 'exists:verifikators,nip'],
+            'aksi'           => ['required', 'in:tugaskan,lepas'],
+            'npsn'           => ['required', 'array', 'min:1', 'max:2000'],
+            'npsn.*'         => ['string', 'max:20'],
+            'verifikator_id' => ['required_if:aksi,tugaskan', 'nullable', 'string'],
+        ], [
+            'npsn.required'              => 'Centang minimal satu sekolah dulu.',
+            'npsn.min'                   => 'Centang minimal satu sekolah dulu.',
+            'verifikator_id.required_if' => 'Pilih verifikator tujuan dulu.',
         ]);
 
-        $sekolah = Sekolah::findOrFail($npsn);
-        $sekolah->update(['verifikator_nip' => $request->input('verifikator_id') ?: null]);
+        $npsn = array_values(array_unique($request->input('npsn')));
+        $nip = null;
+        $nama = null;
 
-        return redirect()
-            ->route('admin.penugasan')
-            ->with('success', "Penugasan verifikator untuk {$sekolah->nama_sekolah} berhasil disimpan.");
+        if ($request->input('aksi') === 'tugaskan') {
+            // Hanya akun verifikator biasa yang boleh dipilih (bukan admin).
+            $verifikator = Verifikator::where('is_admin', false)->find($request->input('verifikator_id'));
+            if (! $verifikator) {
+                throw ValidationException::withMessages(['verifikator_id' => 'Verifikator yang dipilih tidak ditemukan.']);
+            }
+            $nip = $verifikator->nip;
+            $nama = $verifikator->nama;
+        }
+
+        $jumlah = 0;
+        foreach (array_chunk($npsn, 500) as $bagian) {
+            $jumlah += Sekolah::whereIn('npsn', $bagian)->count();
+            Sekolah::whereIn('npsn', $bagian)->update(['verifikator_nip' => $nip]);
+        }
+
+        $pesan = $nip
+            ? "{$jumlah} sekolah berhasil ditugaskan ke {$nama}."
+            : "Penugasan {$jumlah} sekolah berhasil dilepas.";
+
+        return redirect()->route('admin.penugasan')->with('success', $pesan);
     }
 
     /**
