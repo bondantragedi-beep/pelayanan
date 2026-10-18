@@ -55,7 +55,7 @@ Route::middleware('auth:verifikator')->prefix('verifikator')->name('verifikator.
 Route::middleware(['auth:verifikator', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/penugasan', [AdminController::class, 'penugasan'])->name('penugasan');
-    Route::post('/penugasan/{npsn}', [AdminController::class, 'updatePenugasan'])->name('penugasan.update');
+    Route::post('/penugasan', [AdminController::class, 'updatePenugasanMassal'])->name('penugasan.massal');
     Route::get('/data-masuk', [AdminController::class, 'dataMasuk'])->name('data-masuk');
 
     Route::prefix('data-master')->name('data-master.')->group(function () {
