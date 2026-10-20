@@ -12,48 +12,51 @@
     .doc-list{display:flex;flex-direction:column;gap:10px;}
     .doc-item{
         display:flex;align-items:center;gap:12px;
-        padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;
+        padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);
+        transition:border-color .15s ease;
     }
+    .doc-item:hover{border-color:var(--line-strong);}
     .doc-item .doc-icon{
-        width:36px;height:36px;border-radius:9px;background:var(--blue-100);color:var(--blue-700);
+        width:36px;height:36px;border-radius:10px;background:var(--blue-100);color:var(--blue-700);
         display:flex;align-items:center;justify-content:center;flex:0 0 auto;
     }
     .doc-item .doc-icon svg{width:17px;height:17px;}
-    .doc-item .doc-name{font-size:13px;font-weight:700;color:var(--ink);flex:1 1 auto;}
+    .doc-item .doc-name{font-size:13.5px;font-weight:600;color:var(--ink);flex:1 1 auto;}
     .doc-item .doc-view-btn{
         display:inline-flex;align-items:center;gap:6px;
-        padding:8px 14px;border-radius:9px;border:1.5px solid var(--blue-600);
-        color:var(--blue-700);background:#fff;font-family:var(--font-head);font-size:12.5px;font-weight:700;
-        text-decoration:none;
+        padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--line-strong);
+        color:var(--blue-800);background:var(--surface);font-family:var(--font-head);font-size:12.5px;font-weight:700;
+        text-decoration:none;transition:border-color .15s ease,background .15s ease;
     }
-    .doc-item .doc-view-btn:hover{background:var(--blue-50);}
+    .doc-item .doc-view-btn:hover{border-color:var(--blue-600);background:var(--blue-50);}
     .gate-note{
-        display:flex;gap:9px;align-items:flex-start;
-        background:#FFFBF3;border:1px solid #F0DDA8;color:#8A5A0A;
+        display:flex;gap:10px;align-items:flex-start;
+        background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn);
         border-radius:12px;padding:11px 14px;font-size:12.5px;line-height:1.55;margin-top:16px;
     }
-    .gate-note.ok{background:#EAF7EE;border-color:#BFE6CA;color:#1E6B3A;}
+    .gate-note.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok);}
     .gate-note svg{width:15px;height:15px;flex:0 0 auto;margin-top:1px;}
-    .action-row{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;}
-    .btn-accept{
-        padding:12px 22px;border-radius:var(--radius-field);border:none;
-        background:linear-gradient(180deg,#28A669,#1E8449);color:#fff;
-        font-family:var(--font-head);font-size:13.5px;font-weight:700;cursor:pointer;
+    .action-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+    .btn-accept,.btn-reject{
+        height:44px;padding:0 22px;border-radius:var(--radius-field);border:none;
+        color:#fff;font-family:var(--font-head);font-size:13.5px;font-weight:700;cursor:pointer;
+        transition:background .15s ease,transform .1s ease;
     }
-    .btn-reject{
-        padding:12px 22px;border-radius:var(--radius-field);border:none;
-        background:linear-gradient(180deg,var(--red-600),var(--red-500));color:#fff;
-        font-family:var(--font-head);font-size:13.5px;font-weight:700;cursor:pointer;
-    }
-    .btn-accept:disabled, .btn-reject:disabled{opacity:0.45;cursor:not-allowed;}
+    .btn-accept{background:#1C8A59;}
+    .btn-accept:hover{background:#157047;}
+    .btn-reject{background:var(--red-600);}
+    .btn-reject:hover{background:#A01D20;}
+    .btn-accept:active,.btn-reject:active{transform:translateY(1px);}
+    .btn-accept:disabled,.btn-reject:disabled{opacity:.4;cursor:not-allowed;}
     .reject-box{
-        display:none;margin-top:14px;padding:16px;border:1.5px solid #F3C6C6;background:#FDECEC;border-radius:12px;
+        display:none;margin-top:14px;padding:16px;border:1px solid var(--danger-line);background:var(--danger-bg);border-radius:12px;
     }
     .reject-box.show{display:block;}
     .reject-box textarea{
-        width:100%;min-height:90px;border-radius:10px;border:1.5px solid var(--line);
-        padding:10px 12px;font-family:var(--font-body);font-size:13px;resize:vertical;
+        width:100%;min-height:92px;border-radius:var(--radius-field);border:1px solid var(--line-strong);background:#fff;
+        padding:10px 12px;font-family:var(--font-body);font-size:13.5px;resize:vertical;
     }
+    .reject-box textarea:focus{outline:none;border-color:var(--red-600);box-shadow:0 0 0 3px rgba(190,35,38,.16);}
 </style>
 @endpush
 

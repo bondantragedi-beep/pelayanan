@@ -9,10 +9,10 @@
 
 @push('styles')
 <style>
-    .form-field input[readonly]{background:var(--blue-50);color:var(--blue-800);font-weight:600;}
+    .form-field input[readonly]{background:var(--bg);color:var(--blue-800);font-weight:600;}
     .pilih-jenis-note{
-        display:none;margin-top:6px;font-size:12.5px;color:#8A5A0A;background:#FFFBF3;
-        border:1px solid #F0DDA8;border-radius:10px;padding:10px 12px;
+        display:none;margin-top:6px;font-size:12.5px;color:var(--warn);background:var(--warn-bg);
+        border:1px solid var(--warn-line);border-radius:10px;padding:10px 12px;
     }
 </style>
 @endpush
