@@ -14,81 +14,66 @@
 
     <style>
         :root{
-            --blue-950:#071A2C; --blue-900:#0B2942; --blue-800:#0F3B5F; --blue-700:#145A8A;
-            --blue-500:#2E86C8; --amber:#F2B84B; --green:#33C27F; --red:#E15A5F; --line:rgba(255,255,255,0.09);
+            --bg:#06131F; --panel:#0C1D2E; --line:rgba(255,255,255,0.08); --text:#EAF1F8; --muted:#8CA3B8;
+            --amber:#F5B544; --green:#3DCB8B; --red:#F26A6E; --blue:#58A9EC;
             --font-head:'Plus Jakarta Sans',sans-serif; --font-body:'Inter',sans-serif;
         }
         *{box-sizing:border-box;}
-        html,body{margin:0;padding:0;height:100%;background:var(--blue-950);font-family:var(--font-body);color:#EAF1F8;}
-        body{
-            background:
-                radial-gradient(900px 400px at 15% -5%, rgba(46,134,200,0.18), transparent 60%),
-                radial-gradient(700px 340px at 100% 0%, rgba(216,67,74,0.10), transparent 55%),
-                var(--blue-950);
-            padding:28px 40px 36px;
-        }
+        html,body{margin:0;padding:0;height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text);-webkit-font-smoothing:antialiased;}
+        body{padding:30px 44px 36px;}
 
         .topbar{
             display:flex; align-items:center; justify-content:space-between;
-            padding-bottom:20px; margin-bottom:22px; border-bottom:1px solid var(--line);
+            padding-bottom:22px; margin-bottom:24px; border-bottom:1px solid var(--line);
         }
         .brand{display:flex; align-items:center; gap:16px;}
         .brand .emblem{
-            width:56px;height:56px;border-radius:50%;background:#fff;
-            display:flex;align-items:center;justify-content:center;padding:6px;overflow:hidden;
-            box-shadow:0 10px 26px -8px rgba(0,0,0,0.5);
+            width:54px;height:54px;border-radius:14px;background:#fff;
+            display:flex;align-items:center;justify-content:center;padding:7px;overflow:hidden;
         }
         .brand .emblem img{width:100%;height:100%;object-fit:contain;}
-        .brand h1{font-family:var(--font-head);font-size:22px;font-weight:800;margin:0;letter-spacing:-0.01em;}
-        .brand p{font-size:13px;color:#9FB4C6;margin:3px 0 0;}
+        .brand h1{font-family:var(--font-head);font-size:22px;font-weight:800;margin:0;letter-spacing:-0.02em;}
+        .brand p{font-size:13.5px;color:var(--muted);margin:4px 0 0;}
 
         .clock{text-align:right;}
-        .clock .jam{font-family:var(--font-head);font-size:34px;font-weight:800;letter-spacing:0.02em;line-height:1;}
-        .clock .tanggal{font-size:13.5px;color:#9FB4C6;margin-top:6px;text-transform:capitalize;}
+        .clock .jam{font-family:var(--font-head);font-size:38px;font-weight:800;letter-spacing:-0.02em;line-height:1;font-variant-numeric:tabular-nums;}
+        .clock .tanggal{font-size:13.5px;color:var(--muted);margin-top:7px;text-transform:capitalize;}
 
         .ringkasan{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px;}
         .kartu{
-            background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:16px;
-            padding:18px 20px;
+            background:var(--panel); border:1px solid var(--line); border-radius:18px;
+            padding:20px 22px 18px; position:relative; overflow:hidden;
         }
-        .kartu .angka{font-family:var(--font-head);font-size:36px;font-weight:800;line-height:1;}
-        .kartu .label{font-size:12.5px;color:#9FB4C6;margin-top:8px;letter-spacing:0.02em;}
-        .kartu.menunggu .angka{color:var(--amber);}
-        .kartu.ttd .angka{color:var(--blue-500);}
-        .kartu.terkirim .angka{color:var(--green);}
-        .kartu.ditolak .angka{color:var(--red);}
+        .kartu::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:currentColor;opacity:.9;}
+        .kartu .angka{font-family:var(--font-head);font-size:42px;font-weight:800;line-height:1;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;}
+        .kartu .label{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.4;}
+        .kartu.menunggu{color:var(--amber);}
+        .kartu.ttd{color:var(--blue);}
+        .kartu.terkirim{color:var(--green);}
+        .kartu.ditolak{color:var(--red);}
 
-        .tabel-wrap{
-            background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:20px;
-            overflow:hidden;
-        }
+        .tabel-wrap{background:var(--panel); border:1px solid var(--line); border-radius:20px; overflow:hidden;}
         table{width:100%; border-collapse:collapse;}
         thead th{
-            text-align:left; font-size:12.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
-            color:#8FA6BB; padding:16px 22px; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--line);
+            text-align:left; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+            color:var(--muted); padding:16px 22px; border-bottom:1px solid var(--line);
         }
-        tbody td{
-            padding:16px 22px; font-size:15px; border-bottom:1px solid var(--line); vertical-align:middle;
-        }
+        tbody td{padding:16px 22px; font-size:15px; border-bottom:1px solid rgba(255,255,255,0.05); vertical-align:middle;}
         tbody tr:last-child td{border-bottom:none;}
-        tbody tr:nth-child(odd){background:rgba(255,255,255,0.015);}
-        .sekolah-nama{font-family:var(--font-head);font-weight:700;font-size:16px;color:#fff;}
-        .sekolah-sub{display:block;font-size:12.5px;color:#8FA6BB;margin-top:2px;}
+        .sekolah-nama{font-family:var(--font-head);font-weight:700;font-size:16px;color:#fff;letter-spacing:-0.01em;}
+        .sekolah-sub{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;}
         .badge{
-            display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;
-            font-size:12.5px;font-weight:700;white-space:nowrap;
+            display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
+            font-size:12.5px;font-weight:600;white-space:nowrap;
         }
-        .badge::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor;}
-        .badge.menunggu{background:rgba(242,184,75,0.14);color:var(--amber);}
-        .badge.ttd{background:rgba(46,134,200,0.16);color:#5CADEF;}
-        .badge.terkirim{background:rgba(51,194,127,0.14);color:var(--green);}
-        .badge.ditolak{background:rgba(225,90,95,0.14);color:var(--red);}
+        .badge::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;}
+        .badge.menunggu{background:rgba(245,181,68,0.12);color:var(--amber);}
+        .badge.ttd{background:rgba(88,169,236,0.13);color:var(--blue);}
+        .badge.terkirim{background:rgba(61,203,139,0.12);color:var(--green);}
+        .badge.ditolak{background:rgba(242,106,110,0.12);color:var(--red);}
 
-        .kosong{padding:60px 20px;text-align:center;color:#8FA6BB;font-size:15px;}
-
-        .footer-note{
-            text-align:center;margin-top:20px;font-size:12px;color:#6E8298;
-        }
+        .kosong{padding:64px 20px;text-align:center;color:var(--muted);font-size:15px;}
+        .footer-note{text-align:center;margin-top:22px;font-size:12px;color:#5F768B;}
 
         @media (max-width:900px){
             .ringkasan{grid-template-columns:repeat(2,1fr);}
@@ -148,7 +133,7 @@
             <tbody>
                 @forelse ($data as $i => $row)
                     <tr>
-                        <td style="color:#8FA6BB;">{{ $i + 1 }}</td>
+                        <td style="color:var(--muted);">{{ $i + 1 }}</td>
                         <td>
                             <span class="sekolah-nama">{{ $row['sekolah'] }}</span>
                             <span class="sekolah-sub">Kec. {{ $row['kecamatan'] }}</span>
