@@ -1,72 +1,75 @@
-/* ============================================
-   Halaman Admin > Penugasan Sekolah
-   Memakai variabel warna dari auth.css
-   ============================================ */
+/* ============================================================
+   Admin > Penugasan Sekolah — memakai token dari auth.css
+   ============================================================ */
 
 /* ---------- Ringkasan ---------- */
 .pn-ringkas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px;}
 @media (max-width:760px){.pn-ringkas{grid-template-columns:1fr;}}
-.pn-kartu{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
-.pn-angka{font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--blue-900);line-height:1;margin:0 0 6px;}
-.pn-angka.pn-ok{color:#1E8449;}
-.pn-angka.pn-warn{color:#B4740E;}
+.pn-kartu{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;}
+.pn-angka{font-family:var(--font-head);font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--blue-950);line-height:1;margin:0 0 7px;}
+.pn-angka.pn-ok{color:var(--ok);}
+.pn-angka.pn-warn{color:var(--warn);}
 .pn-label{font-size:12.5px;color:var(--muted);margin:0;}
-.pn-kecil{display:inline-block;margin-left:8px;font-size:11px;font-weight:700;color:var(--blue-700);background:var(--blue-100);padding:2px 8px;border-radius:999px;}
-.pn-bar{height:6px;background:#EDEFF2;border-radius:999px;margin-top:10px;overflow:hidden;}
-.pn-bar span{display:block;height:100%;background:linear-gradient(90deg,#28A669,#1E8449);border-radius:999px;}
+.pn-kecil{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:var(--blue-800);background:var(--blue-100);padding:2px 8px;border-radius:999px;letter-spacing:0;}
+.pn-bar{height:6px;background:#EBEFF4;border-radius:999px;margin-top:12px;overflow:hidden;}
+.pn-bar span{display:block;height:100%;background:var(--ok);border-radius:999px;transition:width .4s ease;}
 
 /* ---------- Beban kerja verifikator ---------- */
-.pn-beban{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
+.pn-beban{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px;}
 .pn-beban-item{
     display:grid;grid-template-columns:1fr auto;grid-template-areas:"nama total" "rinci total";
     align-items:center;gap:2px 10px;text-align:left;cursor:pointer;
-    background:var(--blue-50);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;
     font-family:var(--font-body);color:var(--ink);
+    transition:border-color .15s ease,background .15s ease;
 }
-.pn-beban-item:hover{border-color:var(--blue-500);background:#fff;}
-.pn-beban-nama{grid-area:nama;font-size:13px;font-weight:700;color:var(--blue-900);}
-.pn-beban-rinci{grid-area:rinci;font-size:11.5px;color:var(--muted);}
-.pn-beban-total{grid-area:total;font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--blue-700);}
+.pn-beban-item:hover{border-color:var(--blue-600);background:var(--blue-50);}
+.pn-beban-nama{grid-area:nama;font-size:13px;font-weight:600;color:var(--blue-950);}
+.pn-beban-rinci{grid-area:rinci;font-size:12px;color:var(--muted);}
+.pn-beban-total{grid-area:total;font-family:var(--font-head);font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--blue-700);}
 
 /* ---------- Filter ---------- */
 .pn-baris{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;}
 .pn-cari{flex:1 1 260px;}
 .pn-cari input{width:100%;}
 .pn-filter .filter-field input[type=search]{
-    height:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);
-    font-family:var(--font-body);font-size:13px;color:var(--ink);background:#fff;
+    height:40px;padding:0 12px;border-radius:var(--radius-field);border:1px solid var(--line-strong);
+    font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--surface);
+    transition:border-color .15s ease,box-shadow .15s ease;
 }
-.pn-filter .filter-field input[type=search]:focus{outline:none;border-color:var(--blue-500);}
+.pn-filter .filter-field input[type=search]:focus{outline:none;border-color:var(--blue-600);box-shadow:var(--ring);}
 
-.pn-seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+.pn-seg{display:inline-flex;padding:3px;gap:2px;border-radius:11px;background:#EFF2F6;}
 .pn-seg button{
-    height:35px;padding:0 14px;border:none;border-right:1px solid var(--line);background:#fff;cursor:pointer;
-    font-family:var(--font-head);font-size:12.5px;font-weight:700;color:var(--muted);
+    height:34px;padding:0 14px;border:none;border-radius:8px;background:transparent;cursor:pointer;
+    font-family:var(--font-head);font-size:12.5px;font-weight:600;color:var(--muted);
+    transition:background .15s ease,color .15s ease;
 }
-.pn-seg button:last-child{border-right:none;}
-.pn-seg button span{font-weight:600;font-size:11px;margin-left:4px;opacity:.75;}
-.pn-seg button.aktif{background:var(--blue-700);color:#fff;}
+.pn-seg button:hover{color:var(--ink);}
+.pn-seg button span{font-weight:500;font-size:11px;margin-left:4px;opacity:.75;}
+.pn-seg button.aktif{background:var(--surface);color:var(--blue-950);box-shadow:0 1px 2px rgba(15,30,46,.10),0 0 0 1px rgba(15,30,46,.04);}
 
 .pn-kec{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);}
-.pn-kec-judul{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;}
+.pn-kec-judul{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px;}
 .pn-kec-judul small{text-transform:none;font-weight:500;letter-spacing:0;}
 .pn-chips{display:flex;flex-wrap:wrap;gap:8px;}
 .pn-chip{
-    display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:999px;cursor:pointer;
-    border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--font-body);font-size:12.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);font-family:var(--font-body);font-size:12.5px;font-weight:500;
+    transition:border-color .15s ease,background .15s ease,color .15s ease;
 }
-.pn-chip:hover{border-color:var(--blue-500);}
-.pn-chip.aktif{background:var(--blue-700);border-color:var(--blue-700);color:#fff;}
-.pn-chip .pn-n{font-size:11px;font-weight:700;background:#EDEFF2;color:#5B6773;border-radius:999px;padding:1px 7px;}
-.pn-chip.aktif .pn-n{background:rgba(255,255,255,.22);color:#fff;}
-.pn-chip .pn-belum{font-size:11px;font-weight:700;background:#FDF3E3;color:#B4740E;border-radius:999px;padding:1px 7px;}
+.pn-chip:hover{border-color:var(--blue-600);color:var(--blue-800);}
+.pn-chip.aktif{background:var(--blue-950);border-color:var(--blue-950);color:#fff;}
+.pn-chip .pn-n{font-size:11px;font-weight:600;background:#EFF2F6;color:var(--muted);border-radius:999px;padding:1px 7px;}
+.pn-chip.aktif .pn-n{background:rgba(255,255,255,.2);color:#fff;}
+.pn-chip .pn-belum{font-size:11px;font-weight:600;background:var(--warn-bg);color:var(--warn);border-radius:999px;padding:1px 7px;}
 .pn-chip.aktif .pn-belum{background:#F2B84B;color:#4A2F00;}
 
 /* ---------- Tabel ---------- */
 .pn-judul-tabel{padding:18px 22px 0;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
 .pn-info{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;font-size:12.5px;color:var(--muted);}
-.pn-link{background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-body);font-size:12.5px;font-weight:700;color:var(--blue-700);text-decoration:underline;}
-.pn-link:hover{color:var(--blue-500);}
+.pn-link{background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-body);font-size:12.5px;font-weight:600;color:var(--blue-700);text-decoration:underline;text-underline-offset:3px;}
+.pn-link:hover{color:var(--blue-800);}
 
 .pn-tabel{max-height:60vh;overflow:auto;border-top:1px solid var(--line);}
 .pn-tabel .data-table{min-width:720px;}
@@ -74,26 +77,27 @@
 .pn-tabel .kol-cek{width:44px;text-align:center;padding-left:14px;padding-right:6px;}
 .pn-tabel input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--blue-700);}
 .pn-tabel tbody tr[data-row]{cursor:pointer;}
-.pn-tabel tbody tr.dipilih{background:#EAF3FB;}
-.pn-tabel tbody tr.dipilih:hover{background:#E1EEF9;}
+.pn-tabel tbody tr.dipilih{background:var(--blue-50);}
+.pn-tabel tbody tr.dipilih:hover{background:#EBF3FB;}
 
-/* ---------- Bar aksi ---------- */
+/* ---------- Bilah aksi ---------- */
 .pn-aksi{
-    position:sticky;bottom:14px;z-index:15;margin-top:14px;
+    position:sticky;bottom:16px;z-index:15;margin-top:14px;
     display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;
-    background:var(--blue-900);color:#fff;border-radius:14px;padding:12px 18px;
-    box-shadow:0 18px 40px -14px rgba(11,41,66,.55);
+    background:var(--blue-950);color:#fff;border-radius:16px;padding:12px 18px;
+    box-shadow:0 20px 44px -16px rgba(2,35,63,.5);
 }
 .pn-aksi[hidden]{display:none;}
 .pn-aksi-kiri{display:flex;align-items:center;gap:14px;font-size:13.5px;}
 .pn-aksi-kiri .pn-link{color:#BFD9EE;}
 .pn-aksi-kanan{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
-.pn-aksi-label{font-size:12.5px;font-weight:700;color:#BFD9EE;}
+.pn-aksi-label{font-size:12.5px;font-weight:600;color:#BFD9EE;}
 .pn-aksi select{
-    height:40px;min-width:240px;padding:0 12px;border-radius:10px;border:none;
+    height:40px;min-width:240px;padding:0 12px;border-radius:var(--radius-field);border:none;
     font-family:var(--font-body);font-size:13px;color:var(--ink);background:#fff;
 }
-.pn-aksi .btn-primary{background:linear-gradient(180deg,#28A669,#1E8449);box-shadow:none;height:40px;padding:0 20px;}
-.pn-aksi .btn-secondary{height:40px;padding:0 16px;background:transparent;color:#fff;border-color:rgba(255,255,255,.4);}
-.pn-aksi .btn-secondary:hover{background:rgba(255,255,255,.1);}
+.pn-aksi .btn-primary{background:#22A06B;box-shadow:none;height:40px;padding:0 20px;}
+.pn-aksi .btn-primary:hover{background:#1B8A5B;}
+.pn-aksi .btn-secondary{height:40px;padding:0 16px;background:transparent;color:#fff;border-color:rgba(255,255,255,.35);}
+.pn-aksi .btn-secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.6);}
 .pn-aksi button:disabled{opacity:.45;cursor:not-allowed;}
