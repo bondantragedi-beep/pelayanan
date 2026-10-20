@@ -6,6 +6,7 @@
     <title>@yield('title', 'Dinas Pendidikan Kota Makassar')</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#FFFFFF">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +17,7 @@
 
     @stack('styles')
 </head>
-<body>
+<body class="@yield('body-class')">
 
     @yield('content')
 
