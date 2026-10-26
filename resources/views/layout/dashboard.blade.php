@@ -66,7 +66,7 @@
         [
             'key'   => 'tunjangan',
             'label' => 'Tunjangan',
-            'route' => null,
+            'route' => 'sekolah.tunjangan',
             'icon'  => '<rect x="3" y="7" width="18" height="12" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10.5H21" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="14.3" r="1.3" stroke="currentColor" stroke-width="1.4"/>',
         ],
     ];
