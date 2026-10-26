@@ -70,6 +70,13 @@
         <h2>{{ $pengajuan->sekolah->nama_sekolah }} — {{ $pengajuan->labelLayanan() }}</h2>
     </div>
     <p style="font-size:12.5px;color:var(--muted);margin:0 0 4px;">NPSN {{ $pengajuan->npsn }} · Diunggah {{ $pengajuan->created_at->translatedFormat('d M Y, H:i') }}</p>
+    @if ($pengajuan->isTunjangan() && $pengajuan->detail)
+        <p style="font-size:12.5px;color:var(--muted);margin:0;">
+            Dipilih sekolah:
+            <strong>{{ $pengajuan->detail['jenis_pegawai'] ?? '-' }}</strong> ·
+            <strong>{{ ($pengajuan->detail['jenis_tunjangan'] ?? '') === 'anak' ? 'Tunjangan Anak' : 'Tunjangan Istri/Suami' }}</strong>
+        </p>
+    @endif
 </div>
 
 <div class="panel">
@@ -86,7 +93,7 @@
                 <span class="doc-icon">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3H14L19 8V19C19 20.1 18.1 21 17 21H6C4.9 21 4 20.1 4 19V5C4 3.9 4.9 3 6 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
                 </span>
-                <span class="doc-name">{{ $key === 'sk_pangkat_terakhir' ? 'SK Pangkat Terakhir' : ($key === 'sk_kgb_terakhir' ? 'SK KGB Terakhir' : $key) }}</span>
+                <span class="doc-name">{{ \App\Models\Pengajuan::labelBerkas($key) }}</span>
                 <a href="{{ route('verifikator.berkas.dokumen', [$pengajuan, $key]) }}" target="_blank" class="doc-view-btn" data-doc-view>
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12C2 12 5.5 5.5 12 5.5C18.5 5.5 22 12 22 12C22 12 18.5 18.5 12 18.5C5.5 18.5 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.8" stroke="currentColor" stroke-width="1.6"/></svg>
                     Lihat Dokumen
@@ -108,7 +115,7 @@
     @endif
 
     <div class="action-row">
-        <button type="button" class="btn-accept" id="btnAccept" {{ $pengajuan->dilihat_pada ? '' : 'disabled' }} onclick="window.location.href='{{ route('verifikator.berkas.terima', $pengajuan) }}'">
+        <button type="button" class="btn-accept" id="btnAccept" {{ $pengajuan->dilihat_pada ? '' : 'disabled' }} onclick="window.location.href='{{ $pengajuan->isTunjangan() ? route('verifikator.tunjangan.terima', $pengajuan) : route('verifikator.berkas.terima', $pengajuan) }}'">
             Terima &amp; Lanjut Isi Form
         </button>
         <button type="button" class="btn-reject" id="btnReject" {{ $pengajuan->dilihat_pada ? '' : 'disabled' }} onclick="document.getElementById('rejectBox').classList.toggle('show')">
@@ -120,7 +127,7 @@
         <form method="POST" action="{{ route('verifikator.berkas.tolak', $pengajuan) }}">
             @csrf
             <label style="font-size:12.5px;font-weight:700;color:var(--red-600);display:block;margin-bottom:8px;">Alasan Penolakan</label>
-            <textarea name="alasan_ditolak" placeholder="Jelaskan kekurangan berkas, contoh: scan SK KGB Terakhir buram / data tidak sesuai...">{{ old('alasan_ditolak') }}</textarea>
+            <textarea name="alasan_ditolak" placeholder="Jelaskan kekurangan berkas, contoh: scan berkas buram / data tidak sesuai...">{{ old('alasan_ditolak') }}</textarea>
             @error('alasan_ditolak')
                 <p class="field-error">{{ $message }}</p>
             @enderror
