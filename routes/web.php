@@ -9,8 +9,10 @@ use App\Http\Controllers\LayarKantorController;
 use App\Http\Controllers\Sekolah\BerkasController;
 use App\Http\Controllers\Sekolah\DashboardController;
 use App\Http\Controllers\Sekolah\KgbController;
+use App\Http\Controllers\Sekolah\TunjanganController;
 use App\Http\Controllers\Verifikator\BerkasController as VerifikatorBerkasController;
 use App\Http\Controllers\Verifikator\DashboardController as VerifikatorDashboardController;
+use App\Http\Controllers\Verifikator\TunjanganController as VerifikatorTunjanganController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +32,8 @@ Route::middleware('auth:sekolah')->prefix('sekolah')->name('sekolah.')->group(fu
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/layanan/kgb', [KgbController::class, 'create'])->name('kgb');
     Route::post('/layanan/kgb', [KgbController::class, 'store'])->name('kgb.store');
+    Route::get('/layanan/tunjangan', [TunjanganController::class, 'create'])->name('tunjangan');
+    Route::post('/layanan/tunjangan', [TunjanganController::class, 'store'])->name('tunjangan.store');
     Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas');
     Route::get('/inbox', [BerkasController::class, 'inbox'])->name('inbox');
 });
@@ -47,6 +51,12 @@ Route::middleware('auth:verifikator')->prefix('verifikator')->name('verifikator.
     Route::get('/berkas/{pengajuan}/cetak', [VerifikatorBerkasController::class, 'cetak'])->name('berkas.cetak');
     Route::get('/berkas/{pengajuan}/cetak/pdf', [VerifikatorBerkasController::class, 'cetakPdf'])->name('berkas.cetak.pdf');
     Route::post('/berkas/{pengajuan}/kirim', [VerifikatorBerkasController::class, 'kirim'])->name('berkas.kirim');
+
+    // Tunjangan: form isian, simpan, dan unduh PDF Surat Pengantar.
+    // (Lihat berkas, tolak, dan kirim hasil TTD memakai rute berkas di atas.)
+    Route::get('/berkas/{pengajuan}/tunjangan/terima', [VerifikatorTunjanganController::class, 'terimaForm'])->name('tunjangan.terima');
+    Route::post('/berkas/{pengajuan}/tunjangan/terima', [VerifikatorTunjanganController::class, 'terimaSimpan'])->name('tunjangan.terima.store');
+    Route::get('/berkas/{pengajuan}/tunjangan/cetak/pdf', [VerifikatorTunjanganController::class, 'cetakPdf'])->name('tunjangan.cetak.pdf');
 
     Route::get('/riwayat', [VerifikatorBerkasController::class, 'riwayat'])->name('riwayat');
 });
