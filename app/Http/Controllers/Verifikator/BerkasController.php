@@ -117,6 +117,7 @@ class BerkasController extends Controller
     public function terimaForm(Request $request, Pengajuan $pengajuan)
     {
         $this->pastikanWilayahSama($pengajuan);
+        $this->pastikanBukanTunjangan($pengajuan);
         $this->pastikanSudahDilihat($pengajuan);
         $this->pastikanBisaDiisi($pengajuan);
 
@@ -147,6 +148,7 @@ class BerkasController extends Controller
     public function terimaSimpan(Request $request, Pengajuan $pengajuan)
     {
         $this->pastikanWilayahSama($pengajuan);
+        $this->pastikanBukanTunjangan($pengajuan);
         $this->pastikanSudahDilihat($pengajuan);
         $this->pastikanBisaDiisi($pengajuan);
 
@@ -258,7 +260,7 @@ class BerkasController extends Controller
     public function cetak(Request $request, Pengajuan $pengajuan)
     {
         $this->pastikanWilayahSama($pengajuan);
-        abort_if(! $pengajuan->verifikasiKgb, 404, 'Berkas ini belum diisi formulir penerimaannya.');
+        abort_if(! $pengajuan->dataVerifikasi(), 404, 'Berkas ini belum diisi formulir penerimaannya.');
 
         return view('dashboard.verifikator.cetak', [
             'verifikatorNama'      => Auth::guard('verifikator')->user()->nama,
@@ -275,6 +277,7 @@ class BerkasController extends Controller
     public function cetakPdf(Request $request, Pengajuan $pengajuan)
     {
         $this->pastikanWilayahSama($pengajuan);
+        $this->pastikanBukanTunjangan($pengajuan);
 
         $v = $pengajuan->verifikasiKgb;
         abort_if(! $v, 404, 'Berkas ini belum diisi formulir penerimaannya.');
@@ -292,7 +295,7 @@ class BerkasController extends Controller
     public function kirim(Request $request, Pengajuan $pengajuan)
     {
         $this->pastikanWilayahSama($pengajuan);
-        abort_if(! $pengajuan->verifikasiKgb, 404, 'Berkas ini belum diisi formulir penerimaannya.');
+        abort_if(! $pengajuan->dataVerifikasi(), 404, 'Berkas ini belum diisi formulir penerimaannya.');
 
         $request->validate([
             'hasil_ttd' => ['required', 'file', 'mimes:pdf', 'max:4096'],
@@ -336,6 +339,12 @@ class BerkasController extends Controller
     {
         $verifikator = Auth::guard('verifikator')->user();
         abort_unless($pengajuan->sekolah->verifikator_nip === $verifikator->nip, 403, 'Berkas ini bukan sekolah yang ditugaskan ke Anda.');
+    }
+
+    /** Form & PDF di controller ini khusus KGB; Tunjangan punya controller sendiri. */
+    private function pastikanBukanTunjangan(Pengajuan $pengajuan): void
+    {
+        abort_if($pengajuan->isTunjangan(), 404, 'Gunakan form tunjangan untuk berkas ini.');
     }
 
     private function pastikanSudahDilihat(Pengajuan $pengajuan): void
