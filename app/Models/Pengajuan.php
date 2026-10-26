@@ -14,6 +14,7 @@ class Pengajuan extends Model
         'npsn',
         'jenis_layanan',
         'berkas',
+        'detail',
         'status',
         'dilihat_pada',
         'dilihat_oleh_nip',
@@ -27,6 +28,7 @@ class Pengajuan extends Model
     {
         return [
             'berkas'        => 'array',
+            'detail'        => 'array',
             'dilihat_pada'  => 'datetime',
             'diproses_pada' => 'datetime',
         ];
@@ -42,11 +44,43 @@ class Pengajuan extends Model
         return $this->hasOne(VerifikasiKgb::class, 'pengajuan_id');
     }
 
+    public function verifikasiTunjangan(): HasOne
+    {
+        return $this->hasOne(VerifikasiTunjangan::class, 'pengajuan_id');
+    }
+
+    public function isTunjangan(): bool
+    {
+        return $this->jenis_layanan === 'tunjangan';
+    }
+
+    /** Data isian verifikator (KGB atau Tunjangan), null jika belum diisi. */
+    public function dataVerifikasi(): VerifikasiKgb|VerifikasiTunjangan|null
+    {
+        return $this->isTunjangan() ? $this->verifikasiTunjangan : $this->verifikasiKgb;
+    }
+
+    /** Nama berkas ramah-baca untuk daftar dokumen di halaman verifikator. */
+    public static function labelBerkas(string $key): string
+    {
+        return match ($key) {
+            'sk_pangkat_terakhir' => 'SK Pangkat Terakhir',
+            'sk_kgb_terakhir'     => 'SK KGB Terakhir',
+            'kp4'                 => 'KP4',
+            'akta_kelahiran_anak' => 'Akta Kelahiran Anak',
+            'kk'                  => 'Kartu Keluarga (KK)',
+            'sk_terakhir'         => 'SK Terakhir',
+            'buku_nikah'          => 'Buku Nikah',
+            default               => $key,
+        };
+    }
+
     /** Label ramah-baca untuk jenis layanan, dipakai di tampilan. */
     public function labelLayanan(): string
     {
         return match ($this->jenis_layanan) {
-            'kgb' => 'Kenaikan Gaji Berkala (KGB)',
+            'kgb'       => 'Kenaikan Gaji Berkala (KGB)',
+            'tunjangan' => 'Tunjangan' . $this->labelDetailTunjangan(),
             default => ucfirst($this->jenis_layanan),
         };
     }
@@ -70,5 +104,16 @@ class Pengajuan extends Model
         }
 
         return 'pending';
+    }
+
+    /** Tambahan label di daftar: " (Anak, PPPK)" bila sekolah sudah memilih. */
+    private function labelDetailTunjangan(): string
+    {
+        $jenis = ($this->detail['jenis_tunjangan'] ?? null) === 'anak' ? 'Anak' : (($this->detail['jenis_tunjangan'] ?? null) ? 'Istri/Suami' : null);
+        $pegawai = $this->detail['jenis_pegawai'] ?? null;
+
+        $bagian = array_filter([$jenis, $pegawai]);
+
+        return $bagian ? ' (' . implode(', ', $bagian) . ')' : '';
     }
 }
