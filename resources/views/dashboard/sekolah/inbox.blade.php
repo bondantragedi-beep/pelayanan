@@ -36,7 +36,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ asset('storage/' . $item->hasil_path) }}" target="_blank" class="btn-save-row" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                                <a href="{{ route('sekolah.inbox.dokumen', $item) }}" target="_blank" class="btn-save-row" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;"><path d="M12 4V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 11.5L12 16L16.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18V19C4 19.6 4.4 20 5 20H19C19.6 20 20 19.6 20 19V18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                                     Unduh PDF
                                 </a>
