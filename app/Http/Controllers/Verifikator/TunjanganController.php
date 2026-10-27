@@ -52,7 +52,8 @@ class TunjanganController extends Controller
         $d = $request->validate([
             'jenis_pegawai'    => ['required', 'in:PNS,PPPK'],
             'jenis_tunjangan'  => ['required', 'in:istri,suami,anak,istri_anak,suami_anak'],
-            'anak_ke'          => ['nullable', 'integer', 'min:1', 'max:3', 'required_if:jenis_tunjangan,anak,istri_anak,suami_anak'],
+            'anak_ke'          => ['nullable', 'array', 'max:3', 'required_if:jenis_tunjangan,anak,istri_anak,suami_anak'],
+            'anak_ke.*'        => ['integer', 'min:1', 'max:3', 'distinct'],
             'nip_pegawai'      => ['required', 'digits:18', 'exists:pegawai,nip'],
             'pangkat_golongan' => ['required', 'string', 'max:255'],
             'jabatan'          => ['required', 'string', 'max:255'],
@@ -60,10 +61,20 @@ class TunjanganController extends Controller
         ], [
             'nip_pegawai.exists'      => 'NIP tidak ditemukan di data pegawai.',
             'anak_ke.required_if'     => 'Isi anak ke berapa yang diajukan tunjangannya.',
-            'anak_ke.max'             => 'Tunjangan anak hanya sampai anak ke-3.',
+            'anak_ke.max'             => 'Tunjangan anak hanya sampai 3 anak.',
+            'anak_ke.*.max'           => 'Tunjangan anak hanya sampai anak ke-3.',
+            'anak_ke.*.distinct'      => 'Nomor anak tidak boleh sama. Pilih nomor yang berbeda untuk tiap anak.',
         ]);
 
         $pegawai = Pegawai::findOrFail($d['nip_pegawai']);
+
+        // "1,2" (terurut) bila ada tunjangan anak, selain itu kosong.
+        $anakKe = null;
+        if (str_contains($d['jenis_tunjangan'], 'anak')) {
+            $nomor = array_map('intval', $d['anak_ke']);
+            sort($nomor);
+            $anakKe = implode(',', $nomor);
+        }
 
         // Pegawai harus berasal dari sekolah yang memang ditugaskan ke verifikator ini.
         $dalamBinaan = $pegawai->npsn
@@ -79,7 +90,7 @@ class TunjanganController extends Controller
             [
                 'jenis_pegawai'    => $d['jenis_pegawai'],
                 'jenis_tunjangan'  => $d['jenis_tunjangan'],
-                'anak_ke'          => str_contains($d['jenis_tunjangan'], 'anak') ? (int) $d['anak_ke'] : null,
+                'anak_ke'          => $anakKe,
                 'nip_pegawai'      => $pegawai->nip,
                 'nama_pegawai'     => $pegawai->nama,
                 'pangkat_golongan' => $d['pangkat_golongan'],
