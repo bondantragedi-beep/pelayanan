@@ -20,8 +20,9 @@
 
     // Nilai awal dari pilihan sekolah (PNS/PPPK, anak atau istri/suami) bila belum pernah diisi.
     $jenisPegawaiAwal = old('jenis_pegawai', $verifikasi->jenis_pegawai ?? ($pengajuan->detail['jenis_pegawai'] ?? ''));
+    $pilihanSekolah   = $pengajuan->detail['jenis_tunjangan'] ?? '';
     $jenisTunjAwal    = old('jenis_tunjangan', $verifikasi->jenis_tunjangan
-        ?? (($pengajuan->detail['jenis_tunjangan'] ?? '') === 'anak' ? 'anak' : ''));
+        ?? ($pilihanSekolah === 'anak' ? 'anak' : ''));
     $anakKeAwal       = old('anak_ke', $verifikasi->anak_ke ?? 1);
 
     $dataPegawai = $daftarPegawai->map(fn ($p) => [
@@ -64,10 +65,14 @@
                     <option value="istri" {{ $jenisTunjAwal === 'istri' ? 'selected' : '' }}>Istri</option>
                     <option value="suami" {{ $jenisTunjAwal === 'suami' ? 'selected' : '' }}>Suami</option>
                     <option value="anak"  {{ $jenisTunjAwal === 'anak'  ? 'selected' : '' }}>Anak</option>
+                    <option value="istri_anak" {{ $jenisTunjAwal === 'istri_anak' ? 'selected' : '' }}>Istri dan Anak</option>
+                    <option value="suami_anak" {{ $jenisTunjAwal === 'suami_anak' ? 'selected' : '' }}>Suami dan Anak</option>
                 </select>
                 @error('jenis_tunjangan')<p class="field-error">{{ $message }}</p>@enderror
-                @if (($pengajuan->detail['jenis_tunjangan'] ?? '') === 'istri_suami')
+                @if ($pilihanSekolah === 'istri_suami')
                     <span class="form-hint">Sekolah memilih "Istri / Suami" — tentukan sesuai dokumen (Buku Nikah / KP4).</span>
+                @elseif ($pilihanSekolah === 'istri_suami_anak')
+                    <span class="form-hint">Sekolah memilih "Istri / Suami dan Anak" — pilih "Istri dan Anak" atau "Suami dan Anak" sesuai dokumen.</span>
                 @endif
             </div>
 
@@ -152,7 +157,7 @@
 
     // "Anak ke-" hanya muncul bila tunjangan anak
     function aturAnak() {
-        var anak = el('jenisTunjangan').value === 'anak';
+        var anak = el('jenisTunjangan').value.indexOf('anak') !== -1;
         el('boxAnakKe').style.display = anak ? '' : 'none';
         el('anakKe').required = anak;
     }

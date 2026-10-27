@@ -74,7 +74,11 @@
         <p style="font-size:12.5px;color:var(--muted);margin:0;">
             Dipilih sekolah:
             <strong>{{ $pengajuan->detail['jenis_pegawai'] ?? '-' }}</strong> ·
-            <strong>{{ ($pengajuan->detail['jenis_tunjangan'] ?? '') === 'anak' ? 'Tunjangan Anak' : 'Tunjangan Istri/Suami' }}</strong>
+            <strong>{{ match ($pengajuan->detail['jenis_tunjangan'] ?? '') {
+                'anak'             => 'Tunjangan Anak',
+                'istri_suami_anak' => 'Tunjangan Istri/Suami dan Anak',
+                default            => 'Tunjangan Istri/Suami',
+            } }}</strong>
         </p>
     @endif
 </div>
