@@ -23,7 +23,8 @@
     $pilihanSekolah   = $pengajuan->detail['jenis_tunjangan'] ?? '';
     $jenisTunjAwal    = old('jenis_tunjangan', $verifikasi->jenis_tunjangan
         ?? ($pilihanSekolah === 'anak' ? 'anak' : ''));
-    $anakKeAwal       = old('anak_ke', $verifikasi->anak_ke ?? 1);
+    $anakKeAwal       = collect(old('anak_ke', $verifikasi ? $verifikasi->daftarAnakKe() : [1]))
+        ->map(fn ($n) => (int) $n)->filter()->values()->all() ?: [1];
 
     $dataPegawai = $daftarPegawai->map(fn ($p) => [
         'nip'              => $p->nip,
@@ -78,9 +79,11 @@
 
             <div class="form-field" id="boxAnakKe" style="display:none;">
                 <label>Anak Ke- <span class="req">*</span></label>
-                <input type="number" name="anak_ke" id="anakKe" min="1" max="3" value="{{ $anakKeAwal }}">
+                <div id="daftarAnak"></div>
+                <button type="button" id="btnTambahAnak" class="btn-secondary" style="margin-top:8px;padding:7px 14px;font-size:12.5px;">+ Tambah anak</button>
                 @error('anak_ke')<p class="field-error">{{ $message }}</p>@enderror
-                <span class="form-hint">Dicetak di surat, contoh: "Tunjangan Anak Ke-1".</span>
+                @error('anak_ke.*')<p class="field-error">{{ $message }}</p>@enderror
+                <span class="form-hint">Biasanya satu anak. Klik "Tambah anak" bila yang diajukan lebih dari satu (maksimal 3).</span>
             </div>
         </div>
     </div>
@@ -155,11 +158,61 @@
     var pegawai = @json($dataPegawai);
     var el = function (id) { return document.getElementById(id); };
 
-    // "Anak ke-" hanya muncul bila tunjangan anak
+    // "Anak ke-" hanya muncul bila tunjangan mengandung anak. Bisa ditambah sampai 3 anak.
+    var MAKS_ANAK = 3;
+    var daftar = el('daftarAnak');
+    var awalAnak = @json($anakKeAwal);
+
+    function nomorTerpakai() {
+        return Array.prototype.map.call(daftar.querySelectorAll('select'), function (x) { return parseInt(x.value, 10); });
+    }
+
+    function tambahBaris(nilai) {
+        var baris = document.createElement('div');
+        baris.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
+        var sel = document.createElement('select');
+        sel.name = 'anak_ke[]';
+        for (var i = 1; i <= MAKS_ANAK; i++) {
+            var o = document.createElement('option');
+            o.value = i; o.textContent = 'Anak ke-' + i;
+            if (i === nilai) { o.selected = true; }
+            sel.appendChild(o);
+        }
+        baris.appendChild(sel);
+        var hapus = document.createElement('button');
+        hapus.type = 'button';
+        hapus.textContent = 'Hapus';
+        hapus.className = 'btn-secondary';
+        hapus.style.cssText = 'padding:6px 12px;font-size:12px;';
+        hapus.addEventListener('click', function () { baris.remove(); segarkan(); });
+        baris.appendChild(hapus);
+        daftar.appendChild(baris);
+        segarkan();
+    }
+
+    function segarkan() {
+        var baris = daftar.children;
+        for (var i = 0; i < baris.length; i++) {
+            // baris pertama tidak bisa dihapus; harus ada minimal satu anak
+            baris[i].querySelector('button').style.display = (baris.length > 1) ? '' : 'none';
+        }
+        el('btnTambahAnak').style.display = (baris.length >= MAKS_ANAK) ? 'none' : '';
+    }
+
+    el('btnTambahAnak').addEventListener('click', function () {
+        var pakai = nomorTerpakai();
+        for (var n = 1; n <= MAKS_ANAK; n++) {
+            if (pakai.indexOf(n) === -1) { tambahBaris(n); return; }
+        }
+    });
+
+    awalAnak.forEach(function (n) { tambahBaris(n); });
+
     function aturAnak() {
         var anak = el('jenisTunjangan').value.indexOf('anak') !== -1;
         el('boxAnakKe').style.display = anak ? '' : 'none';
-        el('anakKe').required = anak;
+        // Saat bukan tunjangan anak, kolom dinonaktifkan agar tidak ikut terkirim.
+        daftar.querySelectorAll('select').forEach(function (x) { x.disabled = !anak; });
     }
     el('jenisTunjangan').addEventListener('change', aturAnak);
     aturAnak();
