@@ -109,7 +109,12 @@ class Pengajuan extends Model
     /** Tambahan label di daftar: " (Anak, PPPK)" bila sekolah sudah memilih. */
     private function labelDetailTunjangan(): string
     {
-        $jenis = ($this->detail['jenis_tunjangan'] ?? null) === 'anak' ? 'Anak' : (($this->detail['jenis_tunjangan'] ?? null) ? 'Istri/Suami' : null);
+        $jenis = match ($this->detail['jenis_tunjangan'] ?? null) {
+            'anak'             => 'Anak',
+            'istri_suami'      => 'Istri/Suami',
+            'istri_suami_anak' => 'Istri/Suami dan Anak',
+            default            => null,
+        };
         $pegawai = $this->detail['jenis_pegawai'] ?? null;
 
         $bagian = array_filter([$jenis, $pegawai]);

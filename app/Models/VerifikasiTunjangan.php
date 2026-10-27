@@ -20,14 +20,18 @@ class VerifikasiTunjangan extends Model
         return $this->belongsTo(Pengajuan::class, 'pengajuan_id');
     }
 
-    /** "Tunjangan Anak Ke-1" / "Tunjangan Istri" / "Tunjangan Suami" */
+    /** "Tunjangan Anak Ke-1" / "Tunjangan Istri" / "Tunjangan Suami" / "Tunjangan Istri dan Anak Ke-1" */
     public function labelTunjangan(): string
     {
+        $anak = 'Anak Ke-' . ($this->anak_ke ?: 1);
+
         return match ($this->jenis_tunjangan) {
-            'anak'  => 'Tunjangan Anak Ke-' . ($this->anak_ke ?: 1),
-            'istri' => 'Tunjangan Istri',
-            'suami' => 'Tunjangan Suami',
-            default => 'Tunjangan',
+            'anak'       => "Tunjangan {$anak}",
+            'istri'      => 'Tunjangan Istri',
+            'suami'      => 'Tunjangan Suami',
+            'istri_anak' => "Tunjangan Istri dan {$anak}",
+            'suami_anak' => "Tunjangan Suami dan {$anak}",
+            default      => 'Tunjangan',
         };
     }
 
