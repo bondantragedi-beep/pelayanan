@@ -27,7 +27,8 @@ class TunjanganController extends Controller
      * Simpan berkas tunjangan sebagai pengajuan 'pending'.
      *
      * Wajib : KP4, KK, SK Terakhir, Buku Nikah.
-     * Akta Kelahiran Anak: wajib hanya bila yang diajukan tunjangan anak.
+     * Akta Kelahiran Anak: wajib bila yang diajukan mencakup tunjangan anak
+     * (Anak, atau Istri/Suami + Anak).
      * Dicek di server (bukan cuma disembunyikan di tampilan).
      */
     public function store(Request $request)
@@ -38,13 +39,13 @@ class TunjanganController extends Controller
 
         $request->validate([
             'jenis_pegawai'       => ['required', 'in:PNS,PPPK'],
-            'jenis_tunjangan'     => ['required', 'in:istri_suami,anak'],
+            'jenis_tunjangan'     => ['required', 'in:istri_suami,anak,istri_suami_anak'],
             'kp4'                 => $rule,
             'kk'                  => $rule,
             'sk_terakhir'         => $rule,
             'buku_nikah'          => $rule,
             'akta_kelahiran_anak' => array_merge(
-                ['required_if:jenis_tunjangan,anak', 'nullable'],
+                ['required_if:jenis_tunjangan,anak,istri_suami_anak', 'nullable'],
                 array_slice($rule, 1)
             ),
         ], [
@@ -54,12 +55,12 @@ class TunjanganController extends Controller
             'kk.required'              => 'Berkas Kartu Keluarga (KK) wajib diunggah.',
             'sk_terakhir.required'     => 'Berkas SK Terakhir wajib diunggah.',
             'buku_nikah.required'      => 'Berkas Buku Nikah wajib diunggah.',
-            'akta_kelahiran_anak.required_if' => 'Akta Kelahiran Anak wajib diunggah untuk tunjangan anak.',
+            'akta_kelahiran_anak.required_if' => 'Akta Kelahiran Anak wajib diunggah bila mengajukan tunjangan anak.',
             '*.mimes' => 'Berkas harus berformat PDF, JPG, atau PNG.',
             '*.max'   => 'Ukuran berkas maksimal 2 MB.',
         ]);
 
-        $anak = $request->input('jenis_tunjangan') === 'anak';
+        $anak = in_array($request->input('jenis_tunjangan'), ['anak', 'istri_suami_anak'], true);
 
         $simpan = fn (string $field, string $folder) => $request->file($field)
             ->store("tunjangan/{$sekolah->npsn}/{$folder}", 'public');
