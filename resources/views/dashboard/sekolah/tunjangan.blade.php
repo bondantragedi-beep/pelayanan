@@ -19,7 +19,7 @@
     <ul class="req-list">
         <li><span class="num">1</span> Pilih dulu status pegawai (PNS atau PPPK) dan jenis tunjangan yang diajukan.</li>
         <li><span class="num">2</span> Berkas wajib: KP4, Kartu Keluarga (KK), SK Terakhir, dan Buku Nikah.</li>
-        <li><span class="num">3</span> Khusus <strong>tunjangan anak</strong>, wajib melampirkan Akta Kelahiran Anak. Untuk tunjangan istri/suami tidak perlu.</li>
+        <li><span class="num">3</span> Akta Kelahiran Anak wajib dilampirkan bila mengajukan <strong>tunjangan anak</strong> (termasuk pilihan Istri/Suami dan Anak). Untuk tunjangan istri/suami saja tidak perlu.</li>
     </ul>
 </div>
 
@@ -50,6 +50,7 @@
     <div class="pilih-grup">
         <label><input type="radio" name="jenis_tunjangan" value="istri_suami" form="formTunjangan" {{ old('jenis_tunjangan') === 'istri_suami' ? 'checked' : '' }} required> Tunjangan Istri / Suami</label>
         <label><input type="radio" name="jenis_tunjangan" value="anak" form="formTunjangan" {{ old('jenis_tunjangan') === 'anak' ? 'checked' : '' }}> Tunjangan Anak</label>
+        <label><input type="radio" name="jenis_tunjangan" value="istri_suami_anak" form="formTunjangan" {{ old('jenis_tunjangan') === 'istri_suami_anak' ? 'checked' : '' }}> Tunjangan Istri / Suami dan Anak</label>
     </div>
     @error('jenis_tunjangan')<p class="field-error">{{ $message }}</p>@enderror
 </div>
@@ -250,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function aturAkta() {
         var j = terpilih('jenis_tunjangan');
-        var tampil = !!j && j.value === 'anak';
+        var tampil = !!j && (j.value === 'anak' || j.value === 'istri_suami_anak');
         akta.style.display = tampil ? '' : 'none';
         mark.style.display = tampil ? '' : 'none';
         aktaFile.required = tampil;
