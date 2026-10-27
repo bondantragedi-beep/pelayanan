@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->enum('jenis_pegawai', ['PNS', 'PPPK']);
             $table->string('jenis_tunjangan', 20); // istri | suami | anak | istri_anak | suami_anak
-            $table->unsignedTinyInteger('anak_ke')->nullable(); // hanya jika jenis_tunjangan = anak
+            $table->string('anak_ke', 20)->nullable(); // hanya jika ada tunjangan anak; contoh "1" atau "1,2"
 
             $table->string('nip_pegawai', 18);
             $table->string('nama_pegawai');
