@@ -51,8 +51,8 @@ class TunjanganController extends Controller
 
         $d = $request->validate([
             'jenis_pegawai'    => ['required', 'in:PNS,PPPK'],
-            'jenis_tunjangan'  => ['required', 'in:istri,suami,anak'],
-            'anak_ke'          => ['nullable', 'integer', 'min:1', 'max:3', 'required_if:jenis_tunjangan,anak'],
+            'jenis_tunjangan'  => ['required', 'in:istri,suami,anak,istri_anak,suami_anak'],
+            'anak_ke'          => ['nullable', 'integer', 'min:1', 'max:3', 'required_if:jenis_tunjangan,anak,istri_anak,suami_anak'],
             'nip_pegawai'      => ['required', 'digits:18', 'exists:pegawai,nip'],
             'pangkat_golongan' => ['required', 'string', 'max:255'],
             'jabatan'          => ['required', 'string', 'max:255'],
@@ -79,7 +79,7 @@ class TunjanganController extends Controller
             [
                 'jenis_pegawai'    => $d['jenis_pegawai'],
                 'jenis_tunjangan'  => $d['jenis_tunjangan'],
-                'anak_ke'          => $d['jenis_tunjangan'] === 'anak' ? (int) $d['anak_ke'] : null,
+                'anak_ke'          => str_contains($d['jenis_tunjangan'], 'anak') ? (int) $d['anak_ke'] : null,
                 'nip_pegawai'      => $pegawai->nip,
                 'nama_pegawai'     => $pegawai->nama,
                 'pangkat_golongan' => $d['pangkat_golongan'],

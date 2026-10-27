@@ -74,7 +74,13 @@ class BerkasController extends Controller
             ]);
         }
 
-        return redirect(asset('storage/' . $path));
+        // Dibaca & dikirim langsung oleh aplikasi (bukan redirect ke /storage/...),
+        // jadi tidak bergantung pada tautan public/storage dan tidak ada alamat
+        // publik yang bisa ditebak orang luar.
+        $disk = Storage::disk('public');
+        abort_unless($disk->exists($path), 404, 'File dokumen tidak ditemukan di penyimpanan. Minta sekolah mengunggah ulang.');
+
+        return $disk->response($path);
     }
 
     /**
