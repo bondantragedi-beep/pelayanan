@@ -23,7 +23,7 @@ class VerifikasiTunjangan extends Model
     /** "Tunjangan Anak Ke-1" / "Tunjangan Istri" / "Tunjangan Suami" / "Tunjangan Istri dan Anak Ke-1" */
     public function labelTunjangan(): string
     {
-        $anak = 'Anak Ke-' . ($this->anak_ke ?: 1);
+        $anak = $this->labelAnak();
 
         return match ($this->jenis_tunjangan) {
             'anak'       => "Tunjangan {$anak}",
@@ -33,6 +33,29 @@ class VerifikasiTunjangan extends Model
             'suami_anak' => "Tunjangan Suami dan {$anak}",
             default      => 'Tunjangan',
         };
+    }
+
+    /** Nomor anak yang diajukan, terurut. Contoh: [1] atau [1, 2]. */
+    public function daftarAnakKe(): array
+    {
+        $nomor = array_unique(array_filter(array_map('intval', explode(',', (string) $this->anak_ke))));
+        sort($nomor);
+
+        return array_values($nomor) ?: [1];
+    }
+
+    /** "Anak Ke-1" / "Anak Ke-1 dan Ke-2" / "Anak Ke-1, Ke-2, dan Ke-3" */
+    public function labelAnak(): string
+    {
+        $ke = array_map(fn ($n) => "Ke-{$n}", $this->daftarAnakKe());
+        $akhir = array_pop($ke);
+
+        return 'Anak ' . ($ke ? implode(', ', $ke) . ($this->jumlahAnakLebihDari2($ke) ? ', dan ' : ' dan ') : '') . $akhir;
+    }
+
+    private function jumlahAnakLebihDari2(array $sisa): bool
+    {
+        return count($sisa) >= 2;
     }
 
     /** Kalimat di kolom Uraian surat: "Usul Permohonan Tunjangan Anak Ke-1 PPPK a.n :" */
