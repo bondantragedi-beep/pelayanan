@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('pengajuan_id')->unique()->constrained('pengajuan')->cascadeOnDelete();
 
             $table->enum('jenis_pegawai', ['PNS', 'PPPK']);
-            $table->enum('jenis_tunjangan', ['istri', 'suami', 'anak']);
+            $table->string('jenis_tunjangan', 20); // istri | suami | anak | istri_anak | suami_anak
             $table->unsignedTinyInteger('anak_ke')->nullable(); // hanya jika jenis_tunjangan = anak
 
             $table->string('nip_pegawai', 18);
