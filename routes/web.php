@@ -9,6 +9,7 @@ use App\Http\Controllers\LayarKantorController;
 use App\Http\Controllers\Sekolah\BerkasController;
 use App\Http\Controllers\Sekolah\DashboardController;
 use App\Http\Controllers\Sekolah\KgbController;
+use App\Http\Controllers\Sekolah\PasswordController;
 use App\Http\Controllers\Sekolah\TunjanganController;
 use App\Http\Controllers\Verifikator\BerkasController as VerifikatorBerkasController;
 use App\Http\Controllers\Verifikator\DashboardController as VerifikatorDashboardController;
@@ -27,8 +28,16 @@ Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
-// Dikunci: hanya sekolah yang login (guard 'sekolah') yang bisa mengakses.
+// Ubah password sekolah. SENGAJA di luar middleware 'ganti.password', kalau tidak
+// sekolah yang wajib ganti password tidak akan pernah bisa membuka halamannya.
 Route::middleware('auth:sekolah')->prefix('sekolah')->name('sekolah.')->group(function () {
+    Route::get('/ubah-password', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/ubah-password', [PasswordController::class, 'update'])->name('password.update');
+});
+
+// Dikunci: hanya sekolah yang login (guard 'sekolah') yang bisa mengakses.
+// 'ganti.password' = sekolah yang masih memakai password awal diarahkan dulu ke halaman ganti password.
+Route::middleware(['auth:sekolah', 'ganti.password'])->prefix('sekolah')->name('sekolah.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/layanan/kgb', [KgbController::class, 'create'])->name('kgb');
     Route::post('/layanan/kgb', [KgbController::class, 'store'])->name('kgb.store');
@@ -75,6 +84,7 @@ Route::middleware(['auth:verifikator', 'admin'])->prefix('admin')->name('admin.'
         Route::get('/sekolah/{sekolah}/ubah', [AdminSekolahController::class, 'edit'])->name('sekolah.edit');
         Route::put('/sekolah/{sekolah}', [AdminSekolahController::class, 'update'])->name('sekolah.update');
         Route::delete('/sekolah/{sekolah}', [AdminSekolahController::class, 'destroy'])->name('sekolah.destroy');
+        Route::post('/sekolah/{sekolah}/reset-password', [AdminSekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
 
         Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
         Route::get('/pegawai/tambah', [PegawaiController::class, 'create'])->name('pegawai.create');
