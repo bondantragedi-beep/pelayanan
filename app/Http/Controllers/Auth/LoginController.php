@@ -57,6 +57,11 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        // Masih memakai password awal -> langsung ke halaman ganti password.
+        if (Auth::guard('sekolah')->user()->wajib_ganti_password) {
+            return redirect()->route('sekolah.password.edit');
+        }
+
         return redirect()->intended(route('sekolah.dashboard'));
     }
 
