@@ -72,6 +72,9 @@
     ];
 
     $activeMenu = trim($__env->yieldContent('active-menu', ''));
+
+    // Sekolah yang masih memakai password awal: menu disembunyikan sampai password diganti.
+    $paksaGanti = auth('sekolah')->check() && auth('sekolah')->user()->wajib_ganti_password;
 @endphp
 
 <div class="dash-shell">
@@ -96,6 +99,7 @@
             <p class="school-npsn">NPSN: {{ $sekolahNpsn ?? '—' }}</p>
         </div>
 
+        @unless ($paksaGanti)
         <nav class="dash-nav">
             <p class="dash-nav-label">Berkas Saya</p>
 
@@ -142,8 +146,17 @@
                 @endif
             @endforeach
         </nav>
+        @endunless
 
         <div class="dash-sidebar-foot">
+            @unless ($paksaGanti)
+                <a href="{{ route('sekolah.password.edit') }}" class="dash-nav-item {{ $activeMenu === 'password' ? 'is-active' : '' }}" style="margin-bottom:6px;">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 10.5V7.8C8 5.7 9.8 4 12 4C14.2 4 16 5.7 16 7.8V10.5" stroke="currentColor" stroke-width="1.7"/></svg>
+                    </span>
+                    <span class="nav-text">Ubah Password</span>
+                </a>
+            @endunless
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="dash-logout">
@@ -184,7 +197,7 @@
             @if ($errors->any())
                 <div class="dash-alert error">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.2" r="0.9" fill="currentColor"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
-                    <span>Periksa kembali berkas yang diunggah: {{ $errors->first() }}</span>
+                    <span>{{ trim($__env->yieldContent('error-prefix')) ?: 'Periksa kembali berkas yang diunggah:' }} {{ $errors->first() }}</span>
                 </div>
             @endif
 
