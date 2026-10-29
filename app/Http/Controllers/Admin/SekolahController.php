@@ -37,7 +37,8 @@ class SekolahController extends Controller
 
         Sekolah::create([
             ...$validated,
-            'password' => Hash::make($validated['password']),
+            'password'             => Hash::make($validated['password']),
+            'wajib_ganti_password' => true, // password buatan admin = password awal, sekolah harus menggantinya
         ]);
 
         return redirect()->route('admin.data-master.sekolah.index')->with('success', 'Sekolah baru berhasil ditambahkan.');
@@ -59,6 +60,8 @@ class SekolahController extends Controller
 
         if (! empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
+            $validated['wajib_ganti_password'] = true; // admin yang menetapkan -> sekolah harus menggantinya sendiri
+            $validated['password_diubah_pada'] = null;
         } else {
             unset($validated['password']);
         }
@@ -66,6 +69,23 @@ class SekolahController extends Controller
         $sekolah->update($validated);
 
         return redirect()->route('admin.data-master.sekolah.index')->with('success', 'Data sekolah berhasil diperbarui.');
+    }
+
+    /**
+     * Reset password sekolah ke password awal (123456) dan wajibkan
+     * sekolah menggantinya saat login berikutnya. Untuk sekolah yang lupa password.
+     */
+    public function resetPassword(Sekolah $sekolah)
+    {
+        $sekolah->forceFill([
+            'password'             => Hash::make(Sekolah::PASSWORD_AWAL),
+            'wajib_ganti_password' => true,
+            'password_diubah_pada' => null,
+        ])->save();
+
+        return redirect()
+            ->route('admin.data-master.sekolah.index')
+            ->with('success', "Password {$sekolah->nama_sekolah} direset ke " . Sekolah::PASSWORD_AWAL . '. Sekolah wajib menggantinya saat login berikutnya.');
     }
 
     public function destroy(Sekolah $sekolah)
