@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Sekolah extends Authenticatable
 {
+    /** Password awal akun sekolah hasil impor / reset admin. Wajib diganti saat login. */
+    public const PASSWORD_AWAL = '123456';
+
     protected $table = 'sekolah';
 
     protected $primaryKey = 'npsn';
@@ -25,6 +28,8 @@ class Sekolah extends Authenticatable
         'kecamatan',
         'verifikator_nip',
         'password',
+        'wajib_ganti_password',
+        'password_diubah_pada',
     ];
 
     protected $hidden = [
@@ -35,7 +40,9 @@ class Sekolah extends Authenticatable
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
+            'password'             => 'hashed',
+            'wajib_ganti_password' => 'boolean',
+            'password_diubah_pada' => 'datetime',
         ];
     }
 
