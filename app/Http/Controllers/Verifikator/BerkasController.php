@@ -314,6 +314,11 @@ class BerkasController extends Controller
 
         $pengajuan->update(['hasil_path' => $path]);
 
+        // Cuti tahunan yang disetujui dipotongkan ke saldo cuti pegawai (sekali saja).
+        if ($pengajuan->isCuti()) {
+            $pengajuan->verifikasiCuti?->potongSaldo();
+        }
+
         return redirect()
             ->route('verifikator.riwayat')
             ->with('success', 'Dokumen terkirim ke ' . $pengajuan->sekolah->nama_sekolah . '. Sudah muncul di Inbox sekolah.');
@@ -347,10 +352,11 @@ class BerkasController extends Controller
         abort_unless($pengajuan->sekolah->verifikator_nip === $verifikator->nip, 403, 'Berkas ini bukan sekolah yang ditugaskan ke Anda.');
     }
 
-    /** Form & PDF di controller ini khusus KGB; Tunjangan punya controller sendiri. */
+    /** Form & PDF di controller ini khusus KGB; Tunjangan dan Cuti punya controller sendiri. */
     private function pastikanBukanTunjangan(Pengajuan $pengajuan): void
     {
         abort_if($pengajuan->isTunjangan(), 404, 'Gunakan form tunjangan untuk berkas ini.');
+        abort_if($pengajuan->isCuti(), 404, 'Gunakan form cuti untuk berkas ini.');
     }
 
     private function pastikanSudahDilihat(Pengajuan $pengajuan): void

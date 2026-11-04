@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pengajuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BerkasController extends Controller
 {
@@ -48,5 +49,22 @@ class BerkasController extends Controller
             'sekolahNpsn' => $sekolah->npsn,
             'inbox'       => $inbox,
         ]);
+    }
+
+    /**
+     * Unduh/lihat dokumen final (hasil TTD) milik sekolah ini. Hanya berkas
+     * sekolah sendiri yang bisa dibuka; dikirim lewat aplikasi, bukan tautan publik.
+     */
+    public function dokumen(Request $request, Pengajuan $pengajuan)
+    {
+        $sekolah = Auth::guard('sekolah')->user();
+
+        abort_unless($pengajuan->npsn === $sekolah->npsn, 403, 'Berkas ini bukan milik sekolah Anda.');
+        abort_if(! $pengajuan->hasil_path, 404, 'Dokumen belum tersedia.');
+
+        $disk = Storage::disk('public');
+        abort_unless($disk->exists($pengajuan->hasil_path), 404, 'File dokumen tidak ditemukan di penyimpanan.');
+
+        return $disk->response($pengajuan->hasil_path);
     }
 }

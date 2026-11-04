@@ -49,15 +49,29 @@ class Pengajuan extends Model
         return $this->hasOne(VerifikasiTunjangan::class, 'pengajuan_id');
     }
 
+    public function verifikasiCuti(): HasOne
+    {
+        return $this->hasOne(VerifikasiCuti::class, 'pengajuan_id');
+    }
+
     public function isTunjangan(): bool
     {
         return $this->jenis_layanan === 'tunjangan';
     }
 
-    /** Data isian verifikator (KGB atau Tunjangan), null jika belum diisi. */
-    public function dataVerifikasi(): VerifikasiKgb|VerifikasiTunjangan|null
+    public function isCuti(): bool
     {
-        return $this->isTunjangan() ? $this->verifikasiTunjangan : $this->verifikasiKgb;
+        return $this->jenis_layanan === 'cuti';
+    }
+
+    /** Data isian verifikator (KGB, Tunjangan, atau Cuti), null jika belum diisi. */
+    public function dataVerifikasi(): VerifikasiKgb|VerifikasiTunjangan|VerifikasiCuti|null
+    {
+        return match ($this->jenis_layanan) {
+            'tunjangan' => $this->verifikasiTunjangan,
+            'cuti'      => $this->verifikasiCuti,
+            default     => $this->verifikasiKgb,
+        };
     }
 
     /** Nama berkas ramah-baca untuk daftar dokumen di halaman verifikator. */
@@ -71,6 +85,9 @@ class Pengajuan extends Model
             'kk'                  => 'Kartu Keluarga (KK)',
             'sk_terakhir'         => 'SK Terakhir',
             'buku_nikah'          => 'Buku Nikah',
+            'formulir_cuti'       => 'Formulir Permohonan Cuti',
+            'rekap_absen'         => 'Rekap Absen 2 Tahun Terakhir',
+            'berkas_tambahan'     => 'Berkas Tambahan',
             default               => $key,
         };
     }
@@ -81,6 +98,7 @@ class Pengajuan extends Model
         return match ($this->jenis_layanan) {
             'kgb'       => 'Kenaikan Gaji Berkala (KGB)',
             'tunjangan' => 'Tunjangan' . $this->labelDetailTunjangan(),
+            'cuti'      => $this->labelDetailCuti(),
             default => ucfirst($this->jenis_layanan),
         };
     }
@@ -104,6 +122,14 @@ class Pengajuan extends Model
         }
 
         return 'pending';
+    }
+
+    /** "Cuti Tahunan" / "Cuti Tahunan (Ibadah)" / "Cuti Melahirkan" sesuai pilihan sekolah. */
+    private function labelDetailCuti(): string
+    {
+        $label = \App\Support\LamaCuti::JENIS[$this->detail['jenis_cuti'] ?? ''] ?? 'Cuti';
+
+        return ! empty($this->detail['cuti_ibadah']) ? $label . ' (Ibadah)' : $label;
     }
 
     /** Tambahan label di daftar: " (Anak, PPPK)" bila sekolah sudah memilih. */
