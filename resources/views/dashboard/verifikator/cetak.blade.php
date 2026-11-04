@@ -14,27 +14,36 @@
         <div class="panel-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9V3H18V9" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 18H4C3.4 18 3 17.6 3 17V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V17C21 17.6 20.6 18 20 18H18" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="6" y="14" width="12" height="7" stroke="currentColor" stroke-width="1.6"/></svg>
         </div>
-        <h2>Langkah 1 — Unduh {{ $pengajuan->isTunjangan() ? 'Surat Pengantar Tunjangan' : 'Surat KGB' }}</h2>
+        <h2>Langkah 1 — Unduh {{ $pengajuan->isCuti() ? 'Formulir Cuti' : ($pengajuan->isTunjangan() ? 'Surat Pengantar Tunjangan' : 'Surat KGB') }}</h2>
     </div>
 
     @php
         $v = $pengajuan->dataVerifikasi();
-        $routePdf   = $pengajuan->isTunjangan() ? 'verifikator.tunjangan.cetak.pdf' : 'verifikator.berkas.cetak.pdf';
-        $routeUbah  = $pengajuan->isTunjangan() ? 'verifikator.tunjangan.terima' : 'verifikator.berkas.terima';
+        $routePdf   = $pengajuan->isCuti() ? 'verifikator.cuti.cetak.pdf' : ($pengajuan->isTunjangan() ? 'verifikator.tunjangan.cetak.pdf' : 'verifikator.berkas.cetak.pdf');
+        $routeUbah  = $pengajuan->isCuti() ? 'verifikator.cuti.terima' : ($pengajuan->isTunjangan() ? 'verifikator.tunjangan.terima' : 'verifikator.berkas.terima');
     @endphp
 
     <div style="display:flex;flex-wrap:wrap;gap:10px 28px;padding:12px 14px;margin-bottom:14px;background:var(--blue-50);border:1px solid var(--line);border-radius:12px;font-size:13px;">
-        <span><span style="color:var(--muted);">Jenis surat</span><br><strong>{{ $v->jenis_pegawai }}</strong></span>
+        @if ($pengajuan->isCuti())
+            <span><span style="color:var(--muted);">Jenis cuti</span><br><strong>{{ $v->labelJenis() }}</strong></span>
+        @else
+            <span><span style="color:var(--muted);">Jenis surat</span><br><strong>{{ $v->jenis_pegawai }}</strong></span>
+        @endif
         <span><span style="color:var(--muted);">Nama</span><br><strong>{{ $v->nama_pegawai }}</strong></span>
         <span><span style="color:var(--muted);">NIP</span><br><strong>{{ $v->nip_pegawai }}</strong></span>
         @if ($pengajuan->isTunjangan())
             <span><span style="color:var(--muted);">Tunjangan</span><br><strong>{{ $v->labelTunjangan() }}</strong></span>
         @endif
+        @if ($pengajuan->isCuti())
+            <span><span style="color:var(--muted);">Lama cuti</span><br><strong>{{ \App\Support\FormatSurat::tanggal($v->tanggal_mulai) }} s/d {{ \App\Support\FormatSurat::tanggal($v->tanggal_selesai) }} ({{ $v->lama_angka }} {{ $v->lama_satuan }})</strong></span>
+        @endif
         <span><span style="color:var(--muted);">Unit kerja</span><br><strong>{{ $v->unit_kerja }}</strong></span>
     </div>
 
     <p style="font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.6;">
-        @if ($pengajuan->isTunjangan())
+        @if ($pengajuan->isCuti())
+            Unduh <strong>Formulir Permintaan dan Pemberian Cuti ({{ $v->labelJenis() }})</strong>, lalu unggah ke sistem persuratan.
+        @elseif ($pengajuan->isTunjangan())
             Unduh <strong>Surat Pengantar {{ $v->labelTunjangan() }} ({{ $v->jenis_pegawai }})</strong>, lalu unggah ke sistem persuratan.
         @else
             Unduh surat dalam format <strong>{{ $v->jenis_pegawai }}</strong>, lalu unggah ke sistem persuratan.
@@ -47,7 +56,7 @@
     <div style="display:flex;flex-wrap:wrap;gap:10px;">
         <a href="{{ route($routePdf, $pengajuan) }}" class="btn-primary" style="text-decoration:none;">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 11.5L12 16L16.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18V19C4 19.6 4.4 20 5 20H19C19.6 20 20 19.6 20 19V18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            Unduh PDF {{ $pengajuan->isTunjangan() ? 'Surat Pengantar' : 'Surat ' . $v->jenis_pegawai }}
+            Unduh PDF {{ $pengajuan->isCuti() ? 'Formulir Cuti' : ($pengajuan->isTunjangan() ? 'Surat Pengantar' : 'Surat ' . $v->jenis_pegawai) }}
         </a>
 
         @unless ($pengajuan->hasil_path)

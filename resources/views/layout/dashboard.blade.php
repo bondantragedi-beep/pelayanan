@@ -48,7 +48,7 @@
         [
             'key'   => 'cuti',
             'label' => 'Cuti',
-            'route' => null,
+            'route' => 'sekolah.cuti',
             'icon'  => '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
         ],
         [

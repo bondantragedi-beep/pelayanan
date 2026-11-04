@@ -33,7 +33,7 @@
                 <label>Jenjang <span class="req">*</span></label>
                 <select name="jenjang" required>
                     <option value="">— Pilih —</option>
-                    @foreach (['TK','SD','SMP','SMA','SMK'] as $j)
+                    @foreach (['TK','SD','SMP','SKB','KB'] as $j)
                         <option value="{{ $j }}" {{ old('jenjang', $sekolah->jenjang ?? '') === $j ? 'selected' : '' }}>{{ $j }}</option>
                     @endforeach
                 </select>

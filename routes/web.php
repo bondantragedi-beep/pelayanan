@@ -7,11 +7,13 @@ use App\Http\Controllers\Admin\VerifikatorController as AdminVerifikatorControll
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LayarKantorController;
 use App\Http\Controllers\Sekolah\BerkasController;
+use App\Http\Controllers\Sekolah\CutiController;
 use App\Http\Controllers\Sekolah\DashboardController;
 use App\Http\Controllers\Sekolah\KgbController;
 use App\Http\Controllers\Sekolah\PasswordController;
 use App\Http\Controllers\Sekolah\TunjanganController;
 use App\Http\Controllers\Verifikator\BerkasController as VerifikatorBerkasController;
+use App\Http\Controllers\Verifikator\CutiController as VerifikatorCutiController;
 use App\Http\Controllers\Verifikator\DashboardController as VerifikatorDashboardController;
 use App\Http\Controllers\Verifikator\TunjanganController as VerifikatorTunjanganController;
 use Illuminate\Support\Facades\Route;
@@ -43,8 +45,11 @@ Route::middleware(['auth:sekolah', 'ganti.password'])->prefix('sekolah')->name('
     Route::post('/layanan/kgb', [KgbController::class, 'store'])->name('kgb.store');
     Route::get('/layanan/tunjangan', [TunjanganController::class, 'create'])->name('tunjangan');
     Route::post('/layanan/tunjangan', [TunjanganController::class, 'store'])->name('tunjangan.store');
+    Route::get('/layanan/cuti', [CutiController::class, 'create'])->name('cuti');
+    Route::post('/layanan/cuti', [CutiController::class, 'store'])->name('cuti.store');
     Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas');
     Route::get('/inbox', [BerkasController::class, 'inbox'])->name('inbox');
+    Route::get('/inbox/{pengajuan}/dokumen', [BerkasController::class, 'dokumen'])->name('inbox.dokumen');
 });
 
 // Dikunci: verifikator biasa maupun admin sama-sama login lewat guard 'verifikator'.
@@ -66,6 +71,11 @@ Route::middleware('auth:verifikator')->prefix('verifikator')->name('verifikator.
     Route::get('/berkas/{pengajuan}/tunjangan/terima', [VerifikatorTunjanganController::class, 'terimaForm'])->name('tunjangan.terima');
     Route::post('/berkas/{pengajuan}/tunjangan/terima', [VerifikatorTunjanganController::class, 'terimaSimpan'])->name('tunjangan.terima.store');
     Route::get('/berkas/{pengajuan}/tunjangan/cetak/pdf', [VerifikatorTunjanganController::class, 'cetakPdf'])->name('tunjangan.cetak.pdf');
+
+    // Cuti: form isian (catatan cuti, pertimbangan & keputusan), simpan, dan unduh PDF Formulir Cuti.
+    Route::get('/berkas/{pengajuan}/cuti/terima', [VerifikatorCutiController::class, 'terimaForm'])->name('cuti.terima');
+    Route::post('/berkas/{pengajuan}/cuti/terima', [VerifikatorCutiController::class, 'terimaSimpan'])->name('cuti.terima.store');
+    Route::get('/berkas/{pengajuan}/cuti/cetak/pdf', [VerifikatorCutiController::class, 'cetakPdf'])->name('cuti.cetak.pdf');
 
     Route::get('/riwayat', [VerifikatorBerkasController::class, 'riwayat'])->name('riwayat');
 });

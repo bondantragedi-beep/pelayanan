@@ -44,11 +44,22 @@
         </span>
     </a>
 
+    <a href="{{ route('sekolah.cuti') }}" class="svc-card is-open">
+        <span class="svc-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/></svg>
+        </span>
+        <h3 class="svc-title">Cuti</h3>
+        <p class="svc-desc">Ajukan cuti tahunan, besar, sakit, melahirkan, atau alasan penting pegawai sekolah Anda.</p>
+        <span class="svc-status open">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12.5L11 15.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tersedia
+        </span>
+    </a>
+
     @php
         $lockedServices = [
             ['label' => 'Kenaikan Pangkat', 'desc' => 'Pengajuan kenaikan pangkat pegawai.', 'icon' => '<path d="M12 3L14.6 8.4L20.5 9.3L16.3 13.4L17.3 19.3L12 16.5L6.7 19.3L7.7 13.4L3.5 9.3L9.4 8.4L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'],
             ['label' => 'Pensiun', 'desc' => 'Pengajuan berkas persiapan pensiun pegawai.', 'icon' => '<circle cx="12" cy="8" r="3.3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.4 8.1 13.6 12 13.6C15.9 13.6 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'],
-            ['label' => 'Cuti', 'desc' => 'Pengajuan cuti pegawai sekolah.', 'icon' => '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/>'],
             ['label' => 'Pencantuman Gelar', 'desc' => 'Pengajuan pencantuman gelar akademik pegawai.', 'icon' => '<path d="M12 4L21 8.5L12 13L3 8.5L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 10.7V15.3C6.5 15.3 8.7 17.5 12 17.5C15.3 17.5 17.5 15.3 17.5 15.3V10.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'],
             ['label' => 'Tugas Belajar', 'desc' => 'Pengajuan izin tugas belajar pegawai.', 'icon' => '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12V20H5.5C4.7 20 4 19.3 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12V20H18.5C19.3 20 20 19.3 20 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'],
         ];

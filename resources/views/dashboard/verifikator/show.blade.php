@@ -81,6 +81,17 @@
             } }}</strong>
         </p>
     @endif
+    @if ($pengajuan->isCuti() && $pengajuan->detail)
+        @php $dc = $pengajuan->detail; @endphp
+        <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.7;">
+            Dipilih sekolah:
+            <strong>{{ $dc['nama_pegawai'] ?? '-' }}</strong> (NIP {{ $dc['nip_pegawai'] ?? '-' }}) ·
+            <strong>{{ $pengajuan->labelLayanan() }}</strong> ·
+            {{ \App\Support\FormatSurat::tanggal($dc['tanggal_mulai'] ?? null) }} s/d {{ \App\Support\FormatSurat::tanggal($dc['tanggal_selesai'] ?? null) }}
+            ({{ $dc['lama_angka'] ?? '-' }} {{ $dc['lama_satuan'] ?? '' }})<br>
+            Alasan: {{ $dc['alasan'] ?? '-' }}
+        </p>
+    @endif
 </div>
 
 <div class="panel">
@@ -119,7 +130,7 @@
     @endif
 
     <div class="action-row">
-        <button type="button" class="btn-accept" id="btnAccept" {{ $pengajuan->dilihat_pada ? '' : 'disabled' }} onclick="window.location.href='{{ $pengajuan->isTunjangan() ? route('verifikator.tunjangan.terima', $pengajuan) : route('verifikator.berkas.terima', $pengajuan) }}'">
+        <button type="button" class="btn-accept" id="btnAccept" {{ $pengajuan->dilihat_pada ? '' : 'disabled' }} onclick="window.location.href='{{ $pengajuan->isTunjangan() ? route('verifikator.tunjangan.terima', $pengajuan) : ($pengajuan->isCuti() ? route('verifikator.cuti.terima', $pengajuan) : route('verifikator.berkas.terima', $pengajuan)) }}'">
             Terima &amp; Lanjut Isi Form
         </button>
         <button type="button" class="btn-reject" id="btnReject" {{ $pengajuan->dilihat_pada ? '' : 'disabled' }} onclick="document.getElementById('rejectBox').classList.toggle('show')">
