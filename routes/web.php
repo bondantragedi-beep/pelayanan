@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\PopupController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
 use App\Http\Controllers\Admin\VerifikatorController as AdminVerifikatorController;
 use App\Http\Controllers\Auth\LoginController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Verifikator\CutiController as VerifikatorCutiController
 use App\Http\Controllers\Verifikator\DashboardController as VerifikatorDashboardController;
 use App\Http\Controllers\Verifikator\TunjanganController as VerifikatorTunjanganController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('home');
@@ -86,6 +88,13 @@ Route::middleware(['auth:verifikator', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/penugasan', [AdminController::class, 'penugasan'])->name('penugasan');
     Route::post('/penugasan', [AdminController::class, 'updatePenugasanMassal'])->name('penugasan.massal');
     Route::get('/data-masuk', [AdminController::class, 'dataMasuk'])->name('data-masuk');
+
+    // Popup pengumuman untuk sekolah (URL: /admin/popup, nama: admin.popup.*)
+    Route::get('/popup', [PopupController::class, 'index'])->name('popup.index');
+    Route::post('/popup', [PopupController::class, 'store'])->name('popup.store');
+    Route::put('/popup/{popup}', [PopupController::class, 'update'])->name('popup.update');
+    Route::patch('/popup/{popup}/toggle', [PopupController::class, 'toggle'])->name('popup.toggle');
+    Route::delete('/popup/{popup}', [PopupController::class, 'destroy'])->name('popup.destroy');
 
     Route::prefix('data-master')->name('data-master.')->group(function () {
         Route::get('/sekolah', [AdminSekolahController::class, 'index'])->name('sekolah.index');
