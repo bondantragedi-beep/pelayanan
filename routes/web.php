@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\PopupController;
+use App\Http\Controllers\PopupGambarController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
 use App\Http\Controllers\Admin\VerifikatorController as AdminVerifikatorController;
 use App\Http\Controllers\Auth\LoginController;
@@ -81,6 +82,9 @@ Route::middleware('auth:verifikator')->prefix('verifikator')->name('verifikator.
 
     Route::get('/riwayat', [VerifikatorBerkasController::class, 'riwayat'])->name('riwayat');
 });
+
+// Gambar popup pengumuman (dialirkan aplikasi; hanya untuk yang sudah login).
+Route::get('/popup-gambar/{popup}', [PopupGambarController::class, 'show'])->name('popup.gambar');
 
 // Khusus akun verifikator dengan is_admin = true (middleware 'admin', alias di bootstrap/app.php).
 Route::middleware(['auth:verifikator', 'admin'])->prefix('admin')->name('admin.')->group(function () {
