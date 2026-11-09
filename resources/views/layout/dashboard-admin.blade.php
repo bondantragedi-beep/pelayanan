@@ -40,6 +40,12 @@
             'route' => 'admin.data-masuk',
             'icon'  => '<path d="M4 6H20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 12H20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 18H14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
         ],
+        [
+            'key'   => 'popup',
+            'label' => 'Popup Pengumuman',
+            'route' => 'admin.popup.index',
+            'icon'  => '<rect x="3.5" y="5" width="17" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 10H16M8 14H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+        ],
     ];
 
     $dataMasterMenu = [

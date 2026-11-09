@@ -207,6 +207,9 @@
 </div>
 
 <script src="{{ asset('js/dashboard.js') }}"></script>
+{{-- Popup pengumuman dari admin: tampil sekali per login, hanya untuk sekolah --}}
+@include('partials.popup-pengumuman')
+
 @stack('scripts')
 </body>
 </html>
