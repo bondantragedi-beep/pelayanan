@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Popup extends Model
 {
@@ -13,7 +12,8 @@ class Popup extends Model
 
     public function getGambarUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->gambar);
+        // Relatif terhadap host yang sedang diakses, supaya tetap tampil walau APP_URL di .env keliru.
+        return asset('storage/' . ltrim($this->gambar, '/'));
     }
 
     public static function yangAktif(): ?self
