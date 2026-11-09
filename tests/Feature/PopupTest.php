@@ -49,7 +49,7 @@ class PopupTest extends TestCase
         $sekolah = $this->sekolah();
 
         $this->actingAs($sekolah, 'sekolah')->get(route('sekolah.dashboard'))
-            ->assertOk()->assertSee('popupPengumuman', false)->assertSee('/storage/' . $popup->gambar, false);
+            ->assertOk()->assertSee('popupPengumuman', false)->assertSee("/popup-gambar/{$popup->id}", false);
 
         // sekali per login: kunjungan berikutnya di sesi yang sama tidak menampilkannya lagi
         $this->get(route('sekolah.cuti'))->assertOk()->assertDontSee('popupPengumuman', false);
