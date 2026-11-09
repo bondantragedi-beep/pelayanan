@@ -11,36 +11,36 @@
     $adaFoto = file_exists(public_path('imager/hero.jpg'));
 
     $layananLain = [
-        ['Kenaikan Pangkat',  '<path d="M12 3L14.6 8.4L20.5 9.3L16.3 13.4L17.3 19.3L12 16.5L6.7 19.3L7.7 13.4L3.5 9.3L9.4 8.4L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'],
-        ['Pensiun',           '<circle cx="12" cy="8" r="3.3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.4 8.1 13.6 12 13.6C15.9 13.6 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'],
-        ['Cuti',              '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5M8 3V6.5M16 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'],
-        ['Pencantuman Gelar', '<path d="M12 4L21 8.5L12 13L3 8.5L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 10.7V15.3C6.5 15.3 8.7 17.5 12 17.5C15.3 17.5 17.5 15.3 17.5 15.3V10.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'],
-        ['Tugas Belajar',     '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12V20H5.5C4.7 20 4 19.3 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12V20H18.5C19.3 20 20 19.3 20 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'],
+        ['Kenaikan Pangkat',  '<path d="M12 3L14.6 8.4L20.5 9.3L16.3 13.4L17.3 19.3L12 16.5L6.7 19.3L7.7 13.4L3.5 9.3L9.4 8.4L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>', false],
+        ['Pensiun',           '<circle cx="12" cy="8" r="3.3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.4 8.1 13.6 12 13.6C15.9 13.6 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', false],
+        ['Cuti',              '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5M8 3V6.5M16 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', true],
+        ['Pencantuman Gelar', '<path d="M12 4L21 8.5L12 13L3 8.5L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 10.7V15.3C6.5 15.3 8.7 17.5 12 17.5C15.3 17.5 17.5 15.3 17.5 15.3V10.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>', false],
+        ['Tugas Belajar',     '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12V20H5.5C4.7 20 4 19.3 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12V20H18.5C19.3 20 20 19.3 20 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>', false],
     ];
 
     // ---- Carousel hero: satu slide per layanan. -------------------------------------
     // Foto (opsional) diletakkan di public/imager/carousel/{slug}.jpg  (juga .jpeg/.png/.webp).
     // Kalau fotonya belum ada, slide tetap tampil dengan latar warna.
     $slideHero = [
-        ['slug' => 'kgb',               'judul' => 'Kenaikan Gaji Berkala',  'tersedia' => true,
+        ['slug' => 'kgb', 'pendek' => 'KGB', 'ikon' => '<path d="M4 19V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 15L9 10L13 14L20 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6H20V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',               'judul' => 'Kenaikan Gaji Berkala',  'tersedia' => true,
          'teks' => 'Ajukan KGB pegawai sekolah secara daring. Unggah SK, dinas memverifikasi, surat resmi langsung masuk inbox.',
          'warna' => ['#0B2A55', '#1E5AA8']],
-        ['slug' => 'tunjangan',         'judul' => 'Tunjangan Keluarga',     'tersedia' => true,
+        ['slug' => 'tunjangan', 'pendek' => 'Tunjangan', 'ikon' => '<rect x="3" y="7" width="18" height="12" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10.5H21" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="14.3" r="1.3" stroke="currentColor" stroke-width="1.4"/>',         'judul' => 'Tunjangan Keluarga',     'tersedia' => true,
          'teks' => 'Tunjangan istri/suami dan anak untuk PNS maupun PPPK. Lengkapi berkas, pantau prosesnya dari sekolah.',
          'warna' => ['#0E3B43', '#2B8A8A']],
-        ['slug' => 'kenaikan-pangkat',  'judul' => 'Kenaikan Pangkat',       'tersedia' => false,
+        ['slug' => 'kenaikan-pangkat', 'pendek' => 'Kenaikan Pangkat', 'ikon' => '<path d="M12 3L14.6 8.4L20.5 9.3L16.3 13.4L17.3 19.3L12 16.5L6.7 19.3L7.7 13.4L3.5 9.3L9.4 8.4L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',  'judul' => 'Kenaikan Pangkat',       'tersedia' => false,
          'teks' => 'Usul kenaikan pangkat pegawai tanpa bolak-balik ke kantor dinas.',
          'warna' => ['#2A1B4D', '#6B4FB3']],
-        ['slug' => 'pensiun',           'judul' => 'Pensiun',                'tersedia' => false,
+        ['slug' => 'pensiun', 'pendek' => 'Pensiun', 'ikon' => '<circle cx="12" cy="8" r="3.3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.4 8.1 13.6 12 13.6C15.9 13.6 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',           'judul' => 'Pensiun',                'tersedia' => false,
          'teks' => 'Pengurusan berkas pensiun yang lebih tertata dan mudah dipantau.',
          'warna' => ['#4A2410', '#C0703A']],
-        ['slug' => 'cuti',              'judul' => 'Cuti',                   'tersedia' => false,
-         'teks' => 'Pengajuan cuti pegawai dengan alur persetujuan yang jelas.',
+        ['slug' => 'cuti', 'pendek' => 'Cuti', 'ikon' => '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5M8 3V6.5M16 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',              'judul' => 'Cuti',                   'tersedia' => true,
+         'teks' => 'Ajukan cuti tahunan, besar, sakit, melahirkan, atau alasan penting. Formulir resmi tercetak otomatis dari data pegawai.',
          'warna' => ['#10402A', '#3E9A6B']],
-        ['slug' => 'pencantuman-gelar', 'judul' => 'Pencantuman Gelar',      'tersedia' => false,
+        ['slug' => 'pencantuman-gelar', 'pendek' => 'Pencantuman Gelar', 'ikon' => '<path d="M12 4L21 8.5L12 13L3 8.5L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 10.7V15.3C6.5 15.3 8.7 17.5 12 17.5C15.3 17.5 17.5 15.3 17.5 15.3V10.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>', 'judul' => 'Pencantuman Gelar',      'tersedia' => false,
          'teks' => 'Pencantuman gelar akademik pada data kepegawaian.',
          'warna' => ['#3A1F3F', '#A04F9A']],
-        ['slug' => 'tugas-belajar',     'judul' => 'Tugas Belajar',          'tersedia' => false,
+        ['slug' => 'tugas-belajar', 'pendek' => 'Tugas Belajar', 'ikon' => '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12V20H5.5C4.7 20 4 19.3 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12V20H18.5C19.3 20 20 19.3 20 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',     'judul' => 'Tugas Belajar',          'tersedia' => false,
          'teks' => 'Layanan tugas belajar bagi pegawai yang melanjutkan pendidikan.',
          'warna' => ['#16384F', '#3A7CA5']],
     ];
@@ -79,51 +79,85 @@
 <main>
 
     {{-- ================= Hero (carousel layanan) ================= --}}
+    @php $nSlide = count($slideHero); @endphp
     <section class="hc" id="heroCarousel" role="region" aria-roledescription="carousel" aria-label="Layanan kepegawaian">
 
-        <div class="hc-slides">
+        <div class="hc-bg" aria-hidden="true"><span class="b1"></span><span class="b2"></span></div>
+
+        <div class="container hc-head">
+            <span class="hc-pill"><i></i> Pemerintah Kota Makassar</span>
+            <h1 class="hc-h1">Sistem Pelayanan Administrasi <em>Kepegawaian</em></h1>
+            <p class="hc-sub">Ajukan, pantau, dan terima surat resmi dari Dinas Pendidikan Kota Makassar.</p>
+        </div>
+
+        {{-- Panggung poster: yang aktif di tengah, tetangganya mengintip di sisi --}}
+        <div class="hc-stage" id="hcStage">
             @foreach ($slideHero as $i => $sl)
-                <article class="hc-slide {{ $i === 0 ? 'is-active' : '' }}"
-                         style="--c1: {{ $sl['warna'][0] }}; --c2: {{ $sl['warna'][1] }};"
-                         role="group" aria-roledescription="slide" aria-label="{{ $i + 1 }} dari {{ count($slideHero) }}"
+                @php
+                    $d = $i; if ($d > $nSlide / 2) { $d -= $nSlide; }
+                    $kelas = $d === 0 ? 'is-active' : (abs($d) === 1 ? 'is-near' : 'is-far');
+                @endphp
+                <figure class="hc-poster {{ $kelas }}" style="--d: {{ $d }}; --c1: {{ $sl['warna'][0] }}; --c2: {{ $sl['warna'][1] }};"
+                        role="group" aria-roledescription="slide" aria-label="{{ $i + 1 }} dari {{ $nSlide }}: {{ $sl['judul'] }}"
+                        @if ($i !== 0) aria-hidden="true" @endif>
+                    <div class="hc-frame">
+                        @if ($sl['foto'])
+                            <img class="hc-img" src="{{ $sl['foto'] }}" alt="Poster layanan {{ $sl['judul'] }}" draggable="false" @if ($i > 1 && $i < $nSlide - 1) loading="lazy" @endif>
+                        @else
+                            <div class="hc-fallback"><span>{{ $sl['judul'] }}</span></div>
+                        @endif
+                        <span class="hc-gloss"></span>
+                    </div>
+                </figure>
+            @endforeach
+
+            <button type="button" class="hc-arrow hc-prev" data-dir="-1" aria-label="Layanan sebelumnya">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button type="button" class="hc-arrow hc-next" data-dir="1" aria-label="Layanan berikutnya">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+
+        {{-- Kartu info melayang, menimpa tepi bawah poster --}}
+        <div class="container hc-panelwrap">
+            <div class="hc-panel">
+                @foreach ($slideHero as $i => $sl)
+                    <div class="hc-info {{ $i === 0 ? 'is-active' : '' }}" style="--c1: {{ $sl['warna'][0] }}; --c2: {{ $sl['warna'][1] }};"
                          @if ($i !== 0) aria-hidden="true" @endif>
-                    @if ($sl['foto'])
-                        <img class="hc-img" src="{{ $sl['foto'] }}" alt="" @if ($i !== 0) loading="lazy" @endif>
-                    @endif
-                    <div class="hc-shade"></div>
-
-                    <div class="container hc-body">
-                        <span class="hc-pill"><i></i> Pemerintah Kota Makassar</span>
-                        <h1 class="hc-title">{{ $sl['judul'] }}</h1>
-                        <p class="hc-text">{{ $sl['teks'] }}</p>
-                        <span class="hc-tag {{ $sl['tersedia'] ? 'on' : '' }}">{{ $sl['tersedia'] ? 'Tersedia' : 'Segera hadir' }}</span>
-
+                        <span class="hc-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $sl['ikon'] !!}</svg></span>
+                        <div class="hc-copy">
+                            <div class="hc-meta">
+                                <span class="hc-count">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }} / {{ str_pad($nSlide, 2, '0', STR_PAD_LEFT) }}</span>
+                                <span class="hc-tag {{ $sl['tersedia'] ? 'on' : '' }}">{{ $sl['tersedia'] ? 'Tersedia' : 'Segera hadir' }}</span>
+                            </div>
+                            <h2 class="hc-title">{{ $sl['judul'] }}</h2>
+                            <p class="hc-text">{{ $sl['teks'] }}</p>
+                        </div>
                         <div class="hc-cta">
                             <a href="{{ route('login', ['role' => 'sekolah']) }}" class="btn btn-solid">
                                 Masuk sebagai Sekolah
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
-                            <a href="{{ route('login', ['role' => 'verifikator']) }}" class="btn btn-ghost">Masuk sebagai Verifikator</a>
+                            <a href="{{ route('login', ['role' => 'verifikator']) }}" class="btn btn-line">Masuk sebagai Verifikator</a>
                         </div>
                     </div>
-                </article>
-            @endforeach
-        </div>
-
-        <div class="hc-controls container">
-            <div class="hc-dots" role="tablist" aria-label="Pilih layanan">
-                @foreach ($slideHero as $i => $sl)
-                    <button type="button" class="hc-dot {{ $i === 0 ? 'is-active' : '' }}" role="tab"
-                            aria-label="{{ $sl['judul'] }}" @if ($i === 0) aria-current="true" @endif><span></span></button>
                 @endforeach
             </div>
-            <div class="hc-arrows">
-                <button type="button" class="hc-arrow" data-dir="-1" aria-label="Layanan sebelumnya">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button type="button" class="hc-arrow" data-dir="1" aria-label="Layanan berikutnya">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
+        </div>
+
+        {{-- Rel pilihan layanan (juga penanda progres autoplay) --}}
+        <div class="container">
+            <div class="hc-rail" role="tablist" aria-label="Pilih layanan">
+                @foreach ($slideHero as $i => $sl)
+                    <button type="button" class="hc-chip {{ $i === 0 ? 'is-active' : '' }} {{ $sl['tersedia'] ? 'is-ready' : '' }}" role="tab"
+                            style="--c1: {{ $sl['warna'][0] }}; --c2: {{ $sl['warna'][1] }};"
+                            aria-label="{{ $sl['judul'] }}{{ $sl['tersedia'] ? '' : ' (segera hadir)' }}" @if ($i === 0) aria-current="true" @endif>
+                        <span class="hc-chip-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $sl['ikon'] !!}</svg></span>
+                        <span class="hc-chip-tx">{{ $sl['pendek'] }}</span>
+                        <span class="hc-chip-bar"></span>
+                    </button>
+                @endforeach
             </div>
         </div>
     </section>
@@ -179,11 +213,11 @@
                     <span class="tag">Tersedia</span>
                 </div>
 
-                @foreach ($layananLain as [$nama, $ikon])
-                    <div class="svc-tile">
+                @foreach ($layananLain as [$nama, $ikon, $ada])
+                    <div class="svc-tile {{ $ada ? 'is-on' : '' }}">
                         <span class="ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $ikon !!}</svg></span>
                         <h3>{{ $nama }}</h3>
-                        <span class="tag">Segera hadir</span>
+                        <span class="tag">{{ $ada ? 'Tersedia' : 'Segera hadir' }}</span>
                     </div>
                 @endforeach
             </div>
@@ -261,28 +295,44 @@
 
 @push('scripts')
 <script>
-    // Carousel hero: ganti layanan otomatis, jeda saat disentuh / disorot, bisa digeser & pakai panah keyboard.
+    // Carousel hero (coverflow): otomatis ganti layanan, jeda saat disorot/disentuh,
+    // bisa digeser (jari/mouse), klik poster tetangga, panah keyboard, dan rel pilihan layanan.
     (function () {
         var root = document.getElementById('heroCarousel');
         if (!root) { return; }
-        var slides = root.querySelectorAll('.hc-slide');
-        var dots   = root.querySelectorAll('.hc-dot');
-        var n = slides.length, i = 0, timer = null, JEDA = 6000;
+        var stage   = document.getElementById('hcStage');
+        var posters = [].slice.call(root.querySelectorAll('.hc-poster'));
+        var infos   = root.querySelectorAll('.hc-info');
+        var chips   = root.querySelectorAll('.hc-chip');
+        var rail    = root.querySelector('.hc-rail');
+        var n = posters.length, i = 0, timer = null, JEDA = 6500;
         var kurangiGerak = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         root.style.setProperty('--hc-dur', JEDA + 'ms');
 
         function tampil(k) {
-            i = (k + n) % n;
+            i = ((k % n) + n) % n;
             for (var a = 0; a < n; a++) {
-                var aktif = a === i;
-                slides[a].classList.toggle('is-active', aktif);
-                slides[a].setAttribute('aria-hidden', aktif ? 'false' : 'true');
-                dots[a].classList.remove('is-active');
-                dots[a].removeAttribute('aria-current');
+                var d = ((a - i) % n + n) % n;      // jarak melingkar terpendek ke slide aktif
+                if (d > n / 2) { d -= n; }
+                var kelas = d === 0 ? 'is-active' : (Math.abs(d) === 1 ? 'is-near' : 'is-far');
+                posters[a].style.setProperty('--d', d);
+                posters[a].classList.remove('is-active', 'is-near', 'is-far');
+                posters[a].classList.add(kelas);
+                posters[a].setAttribute('aria-hidden', d === 0 ? 'false' : 'true');
+
+                infos[a].classList.toggle('is-active', d === 0);
+                infos[a].setAttribute('aria-hidden', d === 0 ? 'false' : 'true');
+
+                chips[a].classList.remove('is-active');
+                chips[a].removeAttribute('aria-current');
             }
-            void root.offsetWidth; // mulai ulang animasi progres titik
-            dots[i].classList.add('is-active');
-            dots[i].setAttribute('aria-current', 'true');
+            void root.offsetWidth;                  // mulai ulang animasi progres
+            chips[i].classList.add('is-active');
+            chips[i].setAttribute('aria-current', 'true');
+
+            if (rail.scrollWidth > rail.clientWidth) {   // layar kecil: rel ikut menggulir ke chip aktif
+                rail.scrollTo({ left: chips[i].offsetLeft - (rail.clientWidth - chips[i].offsetWidth) / 2, behavior: 'smooth' });
+            }
         }
         function mulai() {
             berhenti();
@@ -293,32 +343,54 @@
         function berhenti() { if (timer) { clearInterval(timer); timer = null; } }
         function jeda()   { berhenti(); root.classList.add('is-paused'); }
         function lanjut() { tampil(i); mulai(); }
+        function ke(k)    { tampil(k); mulai(); }
 
         root.querySelectorAll('.hc-arrow').forEach(function (b) {
-            b.addEventListener('click', function () { tampil(i + parseInt(b.dataset.dir, 10)); mulai(); });
+            b.addEventListener('click', function () { ke(i + parseInt(b.dataset.dir, 10)); });
         });
-        dots.forEach(function (d, k) { d.addEventListener('click', function () { tampil(k); mulai(); }); });
+        chips.forEach(function (c, k) { c.addEventListener('click', function () { ke(k); }); });
 
-        root.addEventListener('mouseenter', jeda);
-        root.addEventListener('mouseleave', lanjut);
+        [stage, root.querySelector('.hc-panelwrap'), rail].forEach(function (el) {
+            el.addEventListener('mouseenter', jeda);
+            el.addEventListener('mouseleave', lanjut);
+        });
         root.addEventListener('focusin', jeda);
         root.addEventListener('focusout', lanjut);
         document.addEventListener('visibilitychange', function () { document.hidden ? jeda() : lanjut(); });
 
         root.addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowLeft')  { tampil(i - 1); mulai(); }
-            if (e.key === 'ArrowRight') { tampil(i + 1); mulai(); }
+            if (e.key === 'ArrowLeft')  { ke(i - 1); }
+            if (e.key === 'ArrowRight') { ke(i + 1); }
         });
 
-        var x0 = null;
-        root.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; jeda(); }, { passive: true });
-        root.addEventListener('touchend', function (e) {
-            if (x0 !== null) {
-                var dx = e.changedTouches[0].clientX - x0;
-                if (Math.abs(dx) > 50) { tampil(i + (dx < 0 ? 1 : -1)); }
-            }
-            x0 = null; lanjut();
+        /* Geser dengan jari / mouse; klik poster tetangga untuk pindah ke sana */
+        var x0 = null, geser = false;
+        stage.addEventListener('pointerdown', function (e) {
+            if (e.target.closest('.hc-arrow')) { return; }
+            x0 = e.clientX; geser = false; jeda();
         });
+        stage.addEventListener('pointermove', function (e) {
+            if (x0 !== null && Math.abs(e.clientX - x0) > 8) { geser = true; }
+            if (e.pointerType !== 'mouse' || x0 !== null || kurangiGerak) { return; }
+            var r = stage.getBoundingClientRect();     // kemiringan 3D halus mengikuti mouse
+            stage.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 6).toFixed(2) + 'deg');
+            stage.style.setProperty('--rx', (((e.clientY - r.top) / r.height - .5) * -4).toFixed(2) + 'deg');
+        });
+        stage.addEventListener('pointerleave', function () {
+            stage.style.setProperty('--rx', '0deg'); stage.style.setProperty('--ry', '0deg');
+        });
+        stage.addEventListener('pointerup', function (e) {
+            if (x0 === null) { return; }
+            var dx = e.clientX - x0;
+            if (Math.abs(dx) > 50) { tampil(i + (dx < 0 ? 1 : -1)); }
+            else if (!geser) {
+                var p = e.target.closest('.hc-poster.is-near');
+                if (p) { tampil(posters.indexOf(p)); }
+            }
+            x0 = null;
+            if (e.pointerType !== 'mouse') { lanjut(); }
+        });
+        stage.addEventListener('pointercancel', function () { x0 = null; lanjut(); });
 
         if (kurangiGerak) { root.classList.add('is-paused'); }
         mulai();
