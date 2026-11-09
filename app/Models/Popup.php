@@ -10,10 +10,10 @@ class Popup extends Model
 
     protected $casts = ['aktif' => 'boolean'];
 
+    /** Disajikan lewat rute aplikasi (bukan /storage/...), supaya tidak perlu `storage:link`. */
     public function getGambarUrlAttribute(): string
     {
-        // Relatif terhadap host yang sedang diakses, supaya tetap tampil walau APP_URL di .env keliru.
-        return asset('storage/' . ltrim($this->gambar, '/'));
+        return route('popup.gambar', $this) . '?v=' . $this->updated_at->timestamp;
     }
 
     public static function yangAktif(): ?self
