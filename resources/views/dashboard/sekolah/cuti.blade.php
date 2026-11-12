@@ -52,10 +52,10 @@
         <h2>Persyaratan Umum</h2>
     </div>
     <ul class="req-list">
-        <li><span class="num">1</span> Pilih pegawai, centang jenis cuti, lalu isi alasan, tanggal, dan alamat selama cuti. Data pegawai (jabatan, pangkat, masa kerja) diambil otomatis dari database.</li>
-        <li><span class="num">2</span> Berkas wajib untuk semua jenis cuti: <strong>Formulir Permohonan Cuti</strong>, <strong>SK Pangkat Terakhir</strong>, dan <strong>Rekap Absen 2 Tahun Terakhir</strong>.</li>
-        <li><span class="num">3</span> Berkas tambahan menyesuaikan jenis cuti: Cuti Umroh/Haji (Surat Bukti Umroh/Haji), Cuti Melahirkan (Surat Keterangan RS Bersalin), Cuti Sakit (Surat Keterangan Dokter), Cuti Alasan Penting (surat keterangan pendukung).</li>
-        <li><span class="num">4</span> Cuti Tahunan paling lama <strong>{{ config('cuti.maks_tahunan') }} hari kerja</strong> (Sabtu, Minggu, dan hari libur tidak dihitung). Khusus cuti karena ibadah (umroh/haji) boleh lebih. Cuti Melahirkan <strong>{{ config('cuti.lama_melahirkan_bulan') }} bulan</strong>.</li>
+        <li><span class="num">1</span> <span>Pilih pegawai, centang jenis cuti, lalu isi alasan, tanggal, dan alamat selama cuti. Data pegawai (jabatan, pangkat, masa kerja) diambil otomatis dari database.</span></li>
+        <li><span class="num">2</span> <span>Berkas wajib untuk semua jenis cuti: <strong>Formulir Permohonan Cuti</strong>, <strong>SK Pangkat Terakhir</strong>, dan <strong>Rekap Absen 2 Tahun Terakhir</strong>.</span></li>
+        <li><span class="num">3</span> <span>Berkas tambahan menyesuaikan jenis cuti: Cuti Umroh/Haji (Surat Bukti Umroh/Haji), Cuti Melahirkan (Surat Keterangan RS Bersalin), Cuti Sakit (Surat Keterangan Dokter), Cuti Alasan Penting (surat keterangan pendukung).</span></li>
+        <li><span class="num">4</span> <span>Cuti Tahunan paling lama <strong>{{ config('cuti.maks_tahunan') }} hari kerja</strong> (Sabtu, Minggu, dan hari libur tidak dihitung). Khusus cuti karena ibadah (umroh/haji) boleh lebih. Cuti Melahirkan <strong>{{ config('cuti.lama_melahirkan_bulan') }} bulan</strong>.</span></li>
     </ul>
 </div>
 
