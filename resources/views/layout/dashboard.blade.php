@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ui-modern.css') }}">
 
     @stack('styles')
 </head>
@@ -34,6 +35,18 @@
             'icon'  => '<path d="M4 19V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 15L9 10L13 14L20 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6H20V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
         ],
         [
+            'key'   => 'tunjangan',
+            'label' => 'Tunjangan',
+            'route' => 'sekolah.tunjangan',
+            'icon'  => '<rect x="3" y="7" width="18" height="12" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10.5H21" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="14.3" r="1.3" stroke="currentColor" stroke-width="1.4"/>',
+        ],
+        [
+            'key'   => 'cuti',
+            'label' => 'Cuti',
+            'route' => 'sekolah.cuti',
+            'icon'  => '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+        ],
+        [
             'key'   => 'pangkat',
             'label' => 'Kenaikan Pangkat',
             'route' => null,
@@ -46,12 +59,6 @@
             'icon'  => '<circle cx="12" cy="8" r="3.3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20C5 16.4 8.1 13.6 12 13.6C15.9 13.6 19 16.4 19 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 3.2L12 1L15 3.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
         ],
         [
-            'key'   => 'cuti',
-            'label' => 'Cuti',
-            'route' => 'sekolah.cuti',
-            'icon'  => '<rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
-        ],
-        [
             'key'   => 'gelar',
             'label' => 'Pencantuman Gelar',
             'route' => null,
@@ -62,12 +69,6 @@
             'label' => 'Tugas Belajar',
             'route' => null,
             'icon'  => '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12V20H5.5C4.7 20 4 19.3 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12V20H18.5C19.3 20 20 19.3 20 18.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
-        ],
-        [
-            'key'   => 'tunjangan',
-            'label' => 'Tunjangan',
-            'route' => 'sekolah.tunjangan',
-            'icon'  => '<rect x="3" y="7" width="18" height="12" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10.5H21" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="14.3" r="1.3" stroke="currentColor" stroke-width="1.4"/>',
         ],
     ];
 
