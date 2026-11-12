@@ -645,3 +645,145 @@ html{scroll-behavior:smooth;}
     .hc-poster.is-active .hc-img{animation:none;}
     .hc-chip.is-active .hc-chip-bar{animation:none;transform:scaleX(1);}
 }
+
+/* ============================================================
+   Bagian bawah beranda: Alur, Layanan, Masuk, Footer
+   ============================================================ */
+:root{--ease-out:cubic-bezier(.22,.8,.22,1);}
+html{scroll-behavior:smooth;}
+.section-eyebrow{
+    padding:5px 12px;border-radius:999px;background:var(--blue-100);letter-spacing:.08em;
+}
+.section-title{font-size:clamp(26px,3.6vw,40px);}
+.section-tint{
+    background:
+        radial-gradient(700px 320px at 0% 0%,#E6F0FC 0%,transparent 65%),
+        radial-gradient(600px 300px at 100% 100%,#E7F5EE 0%,transparent 65%),
+        var(--bg);
+}
+
+/* Reveal bertingkat untuk anak-anak grid */
+.js .reveal.is-in>*{animation:alMasuk .7s var(--ease-out) both;}
+.js .reveal.is-in>*:nth-child(2){animation-delay:.08s;}
+.js .reveal.is-in>*:nth-child(3){animation-delay:.16s;}
+.js .reveal.is-in>*:nth-child(n+4){animation-delay:.22s;}
+@keyframes alMasuk{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+
+/* ---------- Alur ---------- */
+.al-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;counter-reset:al;}
+.al-steps::before{                      /* garis putus-putus penghubung antar langkah */
+    content:"";position:absolute;left:16.6%;right:16.6%;top:57px;height:0;z-index:0;
+    border-top:2px dashed #B9CDE6;
+}
+.al-step{
+    position:relative;z-index:1;text-align:center;
+    background:#fff;border:1px solid rgba(211,218,227,.7);border-radius:24px;padding:30px 24px 28px;
+    box-shadow:0 1px 2px rgba(15,30,46,.04),0 20px 36px -28px rgba(15,30,46,.35);
+    transition:transform .28s var(--ease-out),box-shadow .28s ease;
+}
+.al-step:hover{transform:translateY(-6px);box-shadow:0 1px 2px rgba(15,30,46,.05),0 30px 44px -26px rgba(11,42,85,.45);}
+.al-ic{
+    width:64px;height:64px;border-radius:20px;margin:0 auto 16px;display:grid;place-items:center;color:#fff;
+    background:linear-gradient(135deg,var(--c1),var(--c2));
+    box-shadow:0 16px 26px -14px var(--c2),0 0 0 6px #fff;
+    transition:transform .35s var(--ease-out);
+}
+.al-step:hover .al-ic{transform:scale(1.08) rotate(-5deg);}
+.al-ic svg{width:30px;height:30px;}
+.al-no{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--c2);margin-bottom:8px;}
+.al-step h3{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--blue-950);margin:0 0 8px;}
+.al-step p{font-size:14px;line-height:1.7;color:var(--muted);margin:0;}
+
+/* ---------- Layanan ---------- */
+.ly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.ly-card{
+    position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:250px;
+    background:#fff;border:1px solid rgba(211,218,227,.7);border-radius:26px;padding:28px;
+    text-decoration:none;color:inherit;
+    box-shadow:0 1px 2px rgba(15,30,46,.04),0 20px 36px -28px rgba(15,30,46,.35);
+    transition:transform .3s var(--ease-out),box-shadow .3s ease,border-color .3s ease;
+}
+.ly-card::before{
+    content:"";position:absolute;right:-70px;top:-80px;width:230px;height:230px;border-radius:50%;
+    background:radial-gradient(circle,var(--c2),transparent 68%);opacity:.14;transition:opacity .35s ease,transform .5s var(--ease-out);
+}
+.ly-card:hover{transform:translateY(-8px);box-shadow:0 1px 2px rgba(15,30,46,.05),0 34px 50px -28px rgba(11,42,85,.5);border-color:transparent;}
+.ly-card:hover::before{opacity:.32;transform:scale(1.3);}
+.ly-ic{
+    width:58px;height:58px;border-radius:18px;display:grid;place-items:center;color:#fff;margin-bottom:20px;
+    background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 16px 26px -14px var(--c2);
+    transition:transform .35s var(--ease-out);
+}
+.ly-card:hover .ly-ic{transform:scale(1.08) rotate(-5deg);}
+.ly-ic svg{width:28px;height:28px;}
+.ly-card h3{font-family:var(--font-head);font-size:21px;font-weight:800;letter-spacing:-.025em;color:var(--blue-950);margin:0 0 8px;}
+.ly-card p{font-size:14px;line-height:1.7;color:var(--muted);margin:0 0 20px;flex:1;}
+.ly-foot{display:flex;align-items:center;justify-content:space-between;}
+.ly-tag{
+    display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:5px 11px;border-radius:999px;background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line);
+}
+.ly-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.ly-go{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--blue-700);}
+.ly-go svg{width:16px;height:16px;transition:transform .3s var(--ease-out);}
+.ly-card:hover .ly-go svg{transform:translateX(5px);}
+
+.ly-soon{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:26px;padding:16px 20px;border-radius:20px;background:rgba(255,255,255,.6);border:1.5px dashed var(--line-strong);}
+.ly-soon-t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px;}
+.ly-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink-2);}
+.ly-pill .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));opacity:.7;}
+.ly-pill .ic svg{width:13px;height:13px;}
+
+/* ---------- Pilih peran ---------- */
+.role-card{
+    border-radius:26px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(15,30,46,.04),0 20px 36px -28px rgba(15,30,46,.35);
+    transition:transform .3s var(--ease-out),box-shadow .3s ease,border-color .3s ease;
+}
+.role-card::before{
+    content:"";position:absolute;right:-60px;top:-70px;width:210px;height:210px;border-radius:50%;opacity:.14;
+    background:radial-gradient(circle,#2A7CC2,transparent 68%);transition:opacity .35s ease,transform .5s var(--ease-out);
+}
+.role-card.is-verifikator::before{background:radial-gradient(circle,#D33C3F,transparent 68%);}
+.role-card:hover{transform:translateY(-6px);box-shadow:0 1px 2px rgba(15,30,46,.05),0 34px 50px -28px rgba(11,42,85,.5);}
+.role-card:hover::before{opacity:.3;transform:scale(1.3);}
+.role-card>*:not(.role-card-badge){position:relative;}
+.role-card-badge{position:absolute;z-index:2;}
+.role-card-cta svg{transition:transform .3s var(--ease-out);}
+.role-card:hover .role-card-cta svg{transform:translateX(5px);}
+
+/* ---------- Footer ---------- */
+.btn-light{background:#fff;color:var(--blue-950);border-color:transparent;}
+.btn-light:hover{background:#EAF2FC;}
+.site-footer.ft{
+    position:relative;overflow:hidden;padding:clamp(34px,5vw,52px) 0 28px;color:#CFE0F4;
+    background:
+        radial-gradient(560px 260px at 100% 0%,rgba(127,178,255,.28),transparent 65%),
+        linear-gradient(135deg,#02233F 0%,#0B3A6B 100%);
+}
+.ft-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.14);}
+.ft-brand{display:flex;align-items:center;gap:14px;}
+.ft-logo{width:46px;height:46px;border-radius:14px;background:#fff;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 12px 20px -12px rgba(0,0,0,.6);}
+.ft-logo img{width:30px;height:30px;object-fit:contain;}
+.ft-brand strong{display:block;font-family:var(--font-head);font-size:16px;color:#fff;letter-spacing:-.01em;}
+.ft-brand span{font-size:13px;color:#9DBEE3;}
+.ft-links{display:flex;gap:6px;}
+.ft-links a{padding:8px 14px;border-radius:10px;font-size:14px;font-weight:600;color:#CFE0F4;text-decoration:none;transition:background .15s ease,color .15s ease;}
+.ft-links a:hover{background:rgba(255,255,255,.12);color:#fff;}
+.ft-bottom{padding-top:20px;font-size:12.5px;line-height:1.7;color:#9DBEE3;}
+.ft-bottom p{margin:0;}
+.ft-bottom strong{color:#fff;font-weight:600;}
+
+@media (max-width:860px){
+    .al-steps,.ly-grid{grid-template-columns:1fr;}
+    .al-steps::before{display:none;}
+    .al-step{text-align:left;display:grid;grid-template-columns:auto 1fr;column-gap:18px;align-items:start;padding:22px;}
+    .al-ic{grid-row:1 / 4;margin:0;width:54px;height:54px;border-radius:17px;}
+    .ly-card{min-height:0;}
+    .ft-top{flex-direction:column;align-items:flex-start;}
+}
+@media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .js .reveal.is-in>*{animation:none;}
+    .al-step,.ly-card,.role-card{transition:none;}
+}
