@@ -25,7 +25,19 @@ class DashboardController extends Controller
             ->oldest()
             ->get();
 
+        // Ringkasan seluruh berkas dari sekolah binaan, dikelompokkan per tahap.
+        $tahap = Pengajuan::whereHas('sekolah', fn ($q) => $q->where('verifikator_nip', $verifikator->nip))
+            ->get()
+            ->groupBy(fn (Pengajuan $p) => $p->tahapVerifikator())
+            ->map->count();
+
         return view('dashboard.verifikator.index', [
+            'ringkasan' => [
+                'pending'      => (int) ($tahap['pending'] ?? 0),
+                'menunggu_ttd' => (int) ($tahap['menunggu_ttd'] ?? 0),
+                'terkirim'     => (int) ($tahap['terkirim'] ?? 0),
+                'rejected'     => (int) ($tahap['rejected'] ?? 0),
+            ],
             'verifikatorNama'      => $verifikator->nama,
             'verifikatorKecamatan' => $verifikator->kecamatan,
             'berkasMasuk'          => $berkasMasuk,
