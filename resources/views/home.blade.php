@@ -171,23 +171,26 @@
                 <p class="section-desc">Seluruh proses berjalan di dalam sistem, dari pengajuan sampai surat diterima.</p>
             </div>
 
-            <div class="steps reveal">
-                <div class="step">
-                    <span class="step-num">1</span>
+            <ol class="al-steps reveal">
+                <li class="al-step" style="--c1:#0B2A55;--c2:#1E5AA8;">
+                    <span class="al-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16V4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 8.5L12 4L16.5 8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15V18C4 19.1 4.9 20 6 20H18C19.1 20 20 19.1 20 18V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="al-no">Langkah 1</span>
                     <h3>Sekolah mengunggah berkas</h3>
                     <p>Operator sekolah memilih layanan, melengkapi persyaratan, lalu mengunggah dokumen pegawai.</p>
-                </div>
-                <div class="step">
-                    <span class="step-num">2</span>
+                </li>
+                <li class="al-step" style="--c1:#0E3B43;--c2:#2B8A8A;">
+                    <span class="al-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L19 6V11.5C19 15.8 16.1 19.4 12 21C7.9 19.4 5 15.8 5 11.5V6L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.8 12L11 14.2L15.4 9.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="al-no">Langkah 2</span>
                     <h3>Dinas memverifikasi</h3>
                     <p>Verifikator memeriksa kelengkapan berkas, lalu menerima atau menolak disertai alasan yang jelas.</p>
-                </div>
-                <div class="step">
-                    <span class="step-num">3</span>
+                </li>
+                <li class="al-step" style="--c1:#10402A;--c2:#3E9A6B;">
+                    <span class="al-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 8L12 13.5L20.5 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="al-no">Langkah 3</span>
                     <h3>Surat diterima di inbox</h3>
                     <p>Surat resmi yang telah dicetak dan ditandatangani dikirim langsung ke inbox sekolah.</p>
-                </div>
-            </div>
+                </li>
+            </ol>
         </div>
     </section>
 
@@ -200,27 +203,34 @@
                 <p class="section-desc">Layanan akan terus ditambah secara bertahap.</p>
             </div>
 
-            <div class="svc-list reveal">
-                <div class="svc-tile is-on">
-                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 15L9 10L13 14L20 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6H20V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                    <h3>Kenaikan Gaji Berkala (KGB)</h3>
-                    <span class="tag">Tersedia</span>
-                </div>
-
-                <div class="svc-tile is-on">
-                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="18" height="12" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10.5H21" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="14.3" r="1.3" stroke="currentColor" stroke-width="1.4"/></svg></span>
-                    <h3>Tunjangan</h3>
-                    <span class="tag">Tersedia</span>
-                </div>
-
-                @foreach ($layananLain as [$nama, $ikon, $ada])
-                    <div class="svc-tile {{ $ada ? 'is-on' : '' }}">
-                        <span class="ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $ikon !!}</svg></span>
-                        <h3>{{ $nama }}</h3>
-                        <span class="tag">{{ $ada ? 'Tersedia' : 'Segera hadir' }}</span>
-                    </div>
+            {{-- Layanan yang sudah bisa dipakai --}}
+            <div class="ly-grid reveal">
+                @foreach (collect($slideHero)->where('tersedia', true) as $sl)
+                    <a href="{{ route('login', ['role' => 'sekolah']) }}" class="ly-card" style="--c1: {{ $sl['warna'][0] }}; --c2: {{ $sl['warna'][1] }};">
+                        <span class="ly-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $sl['ikon'] !!}</svg></span>
+                        <h3>{{ $sl['judul'] }}</h3>
+                        <p>{{ $sl['teks'] }}</p>
+                        <span class="ly-foot">
+                            <span class="ly-tag">Tersedia</span>
+                            <span class="ly-go">Masuk <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M13 6L19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        </span>
+                    </a>
                 @endforeach
             </div>
+
+            {{-- Layanan berikutnya --}}
+            @php $segera = collect($slideHero)->where('tersedia', false); @endphp
+            @if ($segera->isNotEmpty())
+                <div class="ly-soon reveal">
+                    <span class="ly-soon-t">Segera hadir</span>
+                    @foreach ($segera as $sl)
+                        <span class="ly-pill" style="--c1: {{ $sl['warna'][0] }}; --c2: {{ $sl['warna'][1] }};">
+                            <span class="ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $sl['ikon'] !!}</svg></span>
+                            {{ $sl['pendek'] }}
+                        </span>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 
@@ -279,15 +289,27 @@
 </main>
 
 {{-- ================= Footer ================= --}}
-<footer class="site-footer">
+<footer class="site-footer ft">
     <div class="container">
-      <div class="footer-inner">
-        <p>
-            © {{ date('Y') }} Dinas Pendidikan Kota Makassar. Sistem Pelayanan Administrasi Kepegawaian.<br>
-            Akses hanya untuk operator sekolah dan verifikator yang terdaftar resmi. Kendala akses akun? Hubungi <strong>Bidang Kepegawaian Dinas Pendidikan</strong> (0411) 872-xxx.
-        </p>
-        <a href="#masuk" class="btn btn-line btn-sm">Masuk ke sistem</a>
-      </div>
+        <div class="ft-top">
+            <div class="ft-brand">
+                <span class="ft-logo"><img src="{{ asset('imager/logo disdik.PNG') }}" alt="Logo Dinas Pendidikan Kota Makassar"></span>
+                <div>
+                    <strong>Dinas Pendidikan Kota Makassar</strong>
+                    <span>Sistem Pelayanan Administrasi Kepegawaian</span>
+                </div>
+            </div>
+            <nav class="ft-links" aria-label="Tautan footer">
+                <a href="#alur">Alur</a>
+                <a href="#layanan">Layanan</a>
+                <a href="#masuk">Masuk</a>
+            </nav>
+            <a href="#masuk" class="btn btn-light btn-sm">Masuk ke sistem</a>
+        </div>
+        <div class="ft-bottom">
+            <p>© {{ date('Y') }} Dinas Pendidikan Kota Makassar. Akses hanya untuk operator sekolah dan verifikator yang terdaftar resmi.</p>
+            <p>Kendala akses akun? Hubungi <strong>Bidang Kepegawaian Dinas Pendidikan</strong> (0411) 872-xxx.</p>
+        </div>
     </div>
 </footer>
 
