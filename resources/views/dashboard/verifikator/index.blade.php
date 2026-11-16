@@ -7,6 +7,11 @@
 
 @section('content')
 
+@php
+    // Nilai bawaan: halaman tetap tampil walau controller belum diperbarui.
+    $ringkasan = $ringkasan ?? ['pending' => 0, 'menunggu_ttd' => 0, 'terkirim' => 0, 'rejected' => 0];
+@endphp
+
 <div class="stat-grid">
     <div class="stat-card warn">
         <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5V12L15 14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
