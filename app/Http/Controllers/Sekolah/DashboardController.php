@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sekolah;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengajuan;
+use App\Support\RingkasanBerkas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,17 +21,16 @@ class DashboardController extends Controller
 
         $semua = Pengajuan::where('npsn', $sekolah->npsn)->latest()->get();
 
-        // Pengelompokan sama dengan tahapVerifikator(): pending, menunggu_ttd, terkirim, rejected.
-        $tahap = $semua->groupBy(fn (Pengajuan $p) => $p->tahapVerifikator())->map->count();
+        $tahap = RingkasanBerkas::hitung($semua);
 
         return view('dashboard.sekolah.index', [
             'sekolahNama' => $sekolah->nama_sekolah,
             'sekolahNpsn' => $sekolah->npsn,
             'stat' => [
-                'menunggu' => (int) ($tahap['pending'] ?? 0),
-                'diproses' => (int) ($tahap['menunggu_ttd'] ?? 0),
-                'selesai'  => (int) ($tahap['terkirim'] ?? 0),
-                'ditolak'  => (int) ($tahap['rejected'] ?? 0),
+                'menunggu' => $tahap['pending'],
+                'diproses' => $tahap['menunggu_ttd'],
+                'selesai'  => $tahap['terkirim'],
+                'ditolak'  => $tahap['rejected'],
             ],
             'terbaru' => $semua->take(4),
         ]);
