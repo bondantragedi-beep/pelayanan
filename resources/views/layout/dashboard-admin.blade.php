@@ -99,6 +99,7 @@
             <p class="dash-nav-label">Menu Admin</p>
 
             @foreach ($adminMenu as $item)
+                @continue(! \Illuminate\Support\Facades\Route::has($item['route']))   {{-- lewati menu yang rutenya belum terpasang --}}
                 <a href="{{ route($item['route']) }}"
                    class="dash-nav-item {{ $activeMenu === $item['key'] ? 'is-active' : '' }}">
                     <span class="nav-icon">
