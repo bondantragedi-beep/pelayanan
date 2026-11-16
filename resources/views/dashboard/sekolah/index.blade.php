@@ -7,6 +7,10 @@
 @section('content')
 
 @php
+    // Nilai bawaan: halaman tetap tampil walau controller belum diperbarui.
+    $stat = $stat ?? ['menunggu' => 0, 'diproses' => 0, 'selesai' => 0, 'ditolak' => 0];
+    $terbaru = $terbaru ?? collect();
+
     // Warna & ikon per layanan (selaras dengan carousel beranda)
     $layanan = [
         'kgb'       => ['c' => ['#0B2A55', '#1E5AA8'], 'ikon' => '<path d="M4 19V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 15L9 10L13 14L20 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6H20V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'],
@@ -108,11 +112,11 @@
 <div class="panel hs-recent">
     @forelse ($terbaru as $b)
         @php
-            [$teksTahap, $kelasTahap] = $tahapUi[$b->tahapVerifikator()];
+            [$teksTahap, $kelasTahap] = $tahapUi[\App\Support\RingkasanBerkas::tahap($b)];
             $w = $layanan[$b->jenis_layanan]['c'] ?? ['#16384F', '#3A7CA5'];
             $ik = $layanan[$b->jenis_layanan]['ikon'] ?? $dokumen;
         @endphp
-        <a href="{{ $b->tahapVerifikator() === 'terkirim' ? route('sekolah.inbox') : route('sekolah.berkas') }}" class="hs-row" style="--c1: {{ $w[0] }}; --c2: {{ $w[1] }};">
+        <a href="{{ \App\Support\RingkasanBerkas::tahap($b) === 'terkirim' ? route('sekolah.inbox') : route('sekolah.berkas') }}" class="hs-row" style="--c1: {{ $w[0] }}; --c2: {{ $w[1] }};">
             <span class="hs-row-ic"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">{!! $ik !!}</svg></span>
             <span class="hs-row-t"><b>{{ $b->labelLayanan() }}</b><small>Diunggah {{ $b->created_at->translatedFormat('d M Y, H:i') }}</small></span>
             <span class="hs-chip {{ $kelasTahap }}">{{ $teksTahap }}</span>
